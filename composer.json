@@ -7,7 +7,7 @@
         "mongodb/mongodb": "^1.0.0"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "\u001b[Cdev-master",
+        "cakephp/cakephp-codesniffer": "dev-master",
         "psr/log": "~1.0",
         "phpunit/phpunit": "~4.0"
     },
@@ -17,5 +17,15 @@
             "name": "xu ding",
             "email": "thedilab@gmail.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "Dilab\\CakeMongo\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dilab\\CakeMongo\\Test\\": "tests"
+        }
+    }
 }
