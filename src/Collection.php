@@ -27,7 +27,7 @@ class Collection implements RepositoryInterface
 
     public function find($type = 'all', $options = [])
     {
-        // TODO: Implement find() method.
+
     }
 
     public function get($primaryKey, $options = [])
