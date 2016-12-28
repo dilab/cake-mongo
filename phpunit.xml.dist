@@ -10,10 +10,12 @@
          stopOnFailure="false"
          stopOnIncomplete="false"
          stopOnSkipped="false"
-         syntaxCheck="false">
+         syntaxCheck="false"
+         bootstrap="tests/bootstrap.php">
     <testsuites>
-        <testsuite name="ElasticSearch">
+        <testsuite name="MongoDB">
             <directory>./tests/TestCase/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
+
