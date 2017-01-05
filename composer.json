@@ -9,7 +9,7 @@
     "require-dev": {
         "cakephp/cakephp-codesniffer": "dev-master",
         "psr/log": "~1.0",
-        "phpunit/phpunit": "~4.0"
+        "phpunit/phpunit": "~5.0"
     },
     "license": "MIT",
     "authors": [
