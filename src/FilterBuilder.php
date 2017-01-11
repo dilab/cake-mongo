@@ -35,11 +35,7 @@ class FilterBuilder
      */
     public function gt($field, $value)
     {
-        return [
-            $field => [
-                '$gt' => $value
-            ]
-        ];
+        return $this->_comparison('$gt', $field, $value);
     }
 
     /**
@@ -51,11 +47,7 @@ class FilterBuilder
      */
     public function gte($field, $value)
     {
-        return [
-            $field => [
-                '$gte' => $value
-            ]
-        ];
+        return $this->_comparison('$gte', $field, $value);
     }
 
     /**
@@ -67,11 +59,7 @@ class FilterBuilder
      */
     public function lt($field, $value)
     {
-        return [
-            $field => [
-                '$lt' => $value
-            ]
-        ];
+        return $this->_comparison('$lt', $field, $value);
     }
 
     /**
@@ -83,11 +71,7 @@ class FilterBuilder
      */
     public function lte($field, $value)
     {
-        return [
-            $field => [
-                '$lte' => $value
-            ]
-        ];
+        return $this->_comparison('$lte', $field, $value);
     }
 
     /**
@@ -99,11 +83,7 @@ class FilterBuilder
      */
     public function ne($field, $value)
     {
-        return [
-            $field => [
-                '$ne' => $value
-            ]
-        ];
+        return $this->_comparison('$ne', $field, $value);
     }
 
     /**
@@ -119,11 +99,7 @@ class FilterBuilder
             $value = [$value];
         }
 
-        return [
-            $field => [
-                '$in' => $value
-            ]
-        ];
+        return $this->_comparison('$in', $field, $value);
     }
 
     /**
@@ -139,12 +115,21 @@ class FilterBuilder
             $value = [$value];
         }
 
-        return [
-            $field => [
-                '$nin' => $value
-            ]
-        ];
+        return $this->_comparison('$nin', $field, $value);
     }
 
+    /**
+     *
+     * Helper for forming comparison filter
+     *
+     * @param $operator
+     * @param $field
+     * @param $value
+     * @return array
+     */
+    private function _comparison($operator, $field, $value)
+    {
+        return [$field => [$operator => $value]];
+    }
 
 }
