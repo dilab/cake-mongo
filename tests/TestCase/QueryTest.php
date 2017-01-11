@@ -45,51 +45,6 @@ class QueryTest extends TestCase
     public function testAll()
     {
         $this->markTestIncomplete();
-        $connection = $this->getMock(
-            'Cake\ElasticSearch\Datasource\Connection',
-            ['getIndex']
-        );
-        $type = new Type([
-            'name' => 'foo',
-            'connection' => $connection
-        ]);
-
-        $index = $this->getMockBuilder('Elastica\Index')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $internalType = $this->getMockBuilder('Elastica\Type')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $connection->expects($this->once())
-            ->method('getIndex')
-            ->will($this->returnValue($index));
-
-        $index->expects($this->once())
-            ->method('getType')
-            ->will($this->returnValue($internalType));
-
-        $result = $this->getMockBuilder('Elastica\ResultSet')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $internalQuery = $this->getMockBuilder('Elastica\Query')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $internalType->expects($this->once())
-            ->method('search')
-            ->will($this->returnCallback(function ($query) use ($result) {
-                $this->assertEquals(new \Elastica\Query, $query);
-
-                return $result;
-            }));
-
-        $query = new Query($type);
-        $resultSet = $query->all();
-        $this->assertInstanceOf('Cake\ElasticSearch\ResultSet', $resultSet);
-        $this->assertSame($result, $resultSet->getInnerIterator());
     }
 
     /**
@@ -99,20 +54,185 @@ class QueryTest extends TestCase
      */
     public function testSelect()
     {
-        $type = new Collection();
-        $query = new Query($type);
+        $collection = new Collection();
+        $query = new Query($collection);
         $this->assertSame($query, $query->select(['a', 'b']));
         $mongoQuery = $query->compileQuery();
         $this->assertEquals(['a' => 1, 'b' => 1], $mongoQuery['projection']);
 
         $query->select(['c', 'd']);
-        $elasticQuery = $query->compileQuery();
-        $this->assertEquals(['a' => 1, 'b' => 1, 'c' => 1, 'd' => 1], $elasticQuery['projection']);
+        $mongoQuery = $query->compileQuery();
+        $this->assertEquals(['a' => 1, 'b' => 1, 'c' => 1, 'd' => 1], $mongoQuery['projection']);
 
         $query->select(['e', 'f'], true);
-        $elasticQuery = $query->compileQuery();
-        $this->assertEquals(['e' => 1, 'f' => 1], $elasticQuery['projection']);
+        $mongoQuery = $query->compileQuery();
+        $this->assertEquals(['e' => 1, 'f' => 1], $mongoQuery['projection']);
     }
 
+    /**
+     * Tests that calling limit() sets the limit option for the MongoDB query
+     *
+     * @return void
+     */
+    public function testLimit()
+    {
+        $collection = new Collection();
+        $query = new Query($collection);
+        $this->assertSame($query, $query->limit(10));
 
+        $mongoQuery = $query->compileQuery();
+
+        $this->assertSame(10, $mongoQuery['limit']);
+
+        $this->assertSame($query, $query->limit(20));
+        $mongoQuery = $query->compileQuery();
+        $this->assertSame(20, $mongoQuery['limit']);
+
+    }
+
+    /**
+     * Tests that calling offset() sets the from option for the MongoDB query
+     *
+     * @return void
+     */
+    public function testOffset()
+    {
+        $collection = new Collection();
+        $query = new Query($collection);
+
+        $this->assertSame($query, $query->offset(10));
+        $mongoQuery = $query->compileQuery();
+        $this->assertSame(10, $mongoQuery['skip']);
+
+        $this->assertSame($query, $query->offset(20));
+        $mongoQuery = $query->compileQuery();
+        $this->assertSame(20, $mongoQuery['skip']);
+    }
+
+    /**
+     * Tests that calling order() will populate the sort part of the MongoDB query.
+     *
+     * @return void
+     */
+    public function testOrder()
+    {
+        $collection = new Collection();
+        $query = new Query($collection);
+        $this->assertSame($query, $query->order('price'));
+
+        $mongoQuery = $query->compileQuery();
+        $expected = ['price' => -1];
+        $this->assertEquals($expected, $mongoQuery['sort']);
+
+        $query->order(['created' => 'asc']);
+        $mongoQuery = $query->compileQuery();
+        $expected = ['price' => -1, 'created' => 1];
+        $this->assertEquals($expected, $mongoQuery['sort']);
+
+        $query->order(['modified' => 'desc', 'score' => 'asc']);
+        $mongoQuery = $query->compileQuery();
+        $expected = ['price' => -1, 'created' => 1, 'modified' => -1, 'score' => 1];
+        $this->assertEquals($expected, $mongoQuery['sort']);
+
+        $query->order(['created' => 'asc'], true);
+        $mongoQuery = $query->compileQuery();
+        $expected = ['created' => 1];
+        $this->assertEquals($expected, $mongoQuery['sort']);
+    }
+
+    /**
+     * Tests that calling clause() gets the part of the query
+     *
+     * @return void
+     */
+    public function testClause()
+    {
+        $collection = new Collection();
+        $query = new Query($collection);
+
+        $query->page(10);
+        $this->assertSame(25, $query->clause('limit'));
+        $this->assertSame(225, $query->clause('offset'));
+
+        $query->limit(12);
+        $this->assertSame(12, $query->clause('limit'));
+
+        $query->offset(100);
+        $this->assertSame(100, $query->clause('offset'));
+
+        $query->order('price');
+        $this->assertSame([0 => [
+            'price' => [
+                'order' => 'desc'
+            ]
+        ]], $query->clause('order'));
+    }
+
+    /**
+     * Tests that calling page() sets the skip option for the MongoDB query and limit (optional)
+     *
+     * @return void
+     */
+    public function testPage()
+    {
+        $collection = new Collection();
+        $query = new Query($collection);
+        $this->assertSame($query, $query->page(10));
+        $mongoQuery = $query->compileQuery();
+        $this->assertSame(225, $mongoQuery['skip']);
+        $this->assertSame(25, $mongoQuery['limit']);
+
+        $this->assertSame($query, $query->page(20, 50));
+        $mongoQuery = $query->compileQuery();
+        $this->assertSame(950, $mongoQuery['skip']);
+        $this->assertSame(50, $mongoQuery['limit']);
+
+        $query->limit(15);
+        $this->assertSame($query, $query->page(20));
+        $mongoQuery = $query->compileQuery();
+        $this->assertSame(285, $mongoQuery['skip']);
+        $this->assertSame(15, $mongoQuery['limit']);
+    }
+
+    /**
+     * Tests that calling applyOptions() sets parts of the query
+     *
+     * @return void
+     */
+    public function testApplyOptions()
+    {
+        $this->markTestIncomplete();
+        $collection = new Collection();
+        $query = new Query($collection);
+
+        $query->applyOptions([
+            'fields' => ['id', 'name'],
+            'conditions' => [
+                'created >=' => '2013-01-01'
+            ],
+            'limit' => 10
+        ]);
+
+        $result = [
+            'projection' => ['id'=>1, 'name'=>1],
+            'limit' => 10,
+            'query' => [
+                'filtered' => [
+                    'filter' => [
+                        'bool' => [
+                            'must' => [[
+                                'range' => [
+                                    'created' => [
+                                        'gte' => '2013-01-01'
+                                    ]
+                                ]
+                            ]]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $this->assertSame($result, $query->compileQuery());
+    }
 }
