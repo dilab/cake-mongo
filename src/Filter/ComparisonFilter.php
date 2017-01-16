@@ -12,7 +12,6 @@ class ComparisonFilter
 
     private $_values;
 
-
     /**
      * ComparisonFilter constructor.
      * @param $field

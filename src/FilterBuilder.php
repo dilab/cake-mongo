@@ -155,13 +155,7 @@ class FilterBuilder
         // @codingStandardsIgnoreEnd
         $filters = func_get_args();
 
-        $orFilter = new LogicFilter('or', []);
-
-        foreach ($filters as $filter) {
-            $orFilter->addFilter($filter);
-        }
-
-        return $orFilter;
+        return $this->_logic('or', $filters);
     }
 
     /**
@@ -184,13 +178,7 @@ class FilterBuilder
         // @codingStandardsIgnoreEnd
         $filters = func_get_args();
 
-        $andFilter = new LogicFilter('and', []);
-
-        foreach ($filters as $filter) {
-            $andFilter->addFilter($filter);
-        }
-
-        return $andFilter;
+        return $this->_logic('and', $filters);
     }
 
     /**
@@ -222,7 +210,6 @@ class FilterBuilder
     /**
      * Returns a filter that is a logical NOR returns all documents that fail to match both clauses.
      *
-     * @param array $filters
      * @return LogicFilter
      */
     // @codingStandardsIgnoreStart
@@ -231,12 +218,21 @@ class FilterBuilder
         // @codingStandardsIgnoreEnd
         $filters = func_get_args();
 
-        $norFilter =new LogicFilter('nor', $filters);
+        return $this->_logic('nor', $filters);
+    }
 
-        foreach ($filters as $filter) {
-            $norFilter->addFilter($filter);
-        }
+    /**
+     * Helps to build logic operator
+     *
+     * @param $operator
+     * @param $filters
+     * @return LogicFilter
+     */
+    private function _logic($operator, $filters)
+    {
+        $norFilter = new LogicFilter($operator, $filters);
 
         return $norFilter;
     }
+
 }

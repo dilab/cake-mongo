@@ -189,6 +189,7 @@ class FilterBuilderTest extends TestCase
             $builder->lt('quantity', 20),
             $builder->eq('price', 10)
         )->toArray();
+
         $expected = [
             '$or' => [
                 ['quantity' => ['$lt' => 20]],
@@ -210,6 +211,7 @@ class FilterBuilderTest extends TestCase
             $builder->lt('quantity', 20),
             $builder->eq('price', 10)
         )->toArray();
+
         $expected = [
             '$and' => [
                 ['quantity' => ['$lt' => 20]],
@@ -230,6 +232,7 @@ class FilterBuilderTest extends TestCase
         $result = $builder->not(
             $builder->in('title', ['cake', 'orm'])
         )->toArray();
+
         $expected = [
             'title' => [
                 '$not' => ['$in' => ['cake', 'orm']]
@@ -250,12 +253,13 @@ class FilterBuilderTest extends TestCase
             $builder->eq('title', 1),
             $builder->lt('quantity', 20)
         )->toArray();
+
         $expected = [
             '$nor' => [
                 ['title' => 1],
                 ['quantity' => ['$lt' => 20]]
             ]
         ];
-        $this->assertEquals($expected, $result->toArray());
+        $this->assertEquals($expected, $result);
     }
 }
