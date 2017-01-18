@@ -4,7 +4,7 @@
 namespace Dilab\CakeMongo\Filter;
 
 
-class LogicFilter
+class LogicFilter extends AbstractFilter
 {
     private $_logic;
 

@@ -4,12 +4,14 @@
 namespace Dilab\CakeMongo;
 
 use Dilab\CakeMongo\Filter\ComparisonFilter;
+use Dilab\CakeMongo\Filter\ElementFilter;
 use Dilab\CakeMongo\Filter\LogicFilter;
 
 /**
  * Class FilterBuilder
  * @package Dilab\CakeMongo
  * @see https://docs.mongodb.com/manual/tutorial/query-documents/#specify-query-filter-conditions
+ *      https://docs.mongodb.com/manual/reference/operator/query/#query-and-projection-operators
  *
  * A query filter is to specify which documents to return.
  * It is implemented based on
@@ -234,5 +236,92 @@ class FilterBuilder
 
         return $norFilter;
     }
+
+    /**
+     *
+     * Return a filter that matches documents that have the specified field.
+     *
+     * @param $field
+     * @return ElementFilter
+     */
+    public function exists($field)
+    {
+        return new ElementFilter('exists', $field);
+    }
+
+    /**
+     * Converts an array into a single array of filter objects
+     *
+     * ### Parsing a single array:
+     *
+     *   {{{
+     *       $filter = $builder->parse([
+     *           'name' => 'mark',
+     *           'age <=' => 35
+     *       ]);
+     *
+     *       // Equivalent to:
+     *       $filter = [
+     *           $builder->eq('name', 'mark'),
+     *           $builder->lte('age', 35)
+     *       ];
+     *   }}}
+     *
+     * ### Creating "or" conditions:
+     *
+     * {{{
+     *  $filter = $builder->parse([
+     *      'or' => [
+     *          'name' => 'mark',
+     *          'age <=' => 35
+     *      ]
+     *  ]);
+     *
+     *  // Equivalent to:
+     *  $filter = [$builder->or(
+     *      $builder->eq('name', 'mark'),
+     *      $builder->lte('age', 35)
+     *  )];
+     * }}}
+     *
+     * ### Negating conditions:
+     *
+     * {{{
+     *  $filter = $builder->parse([
+     *      'not' => [
+     *          'name' => 'mark',
+     *      ]
+     *  ]);
+     *
+     *  // Equivalent to:
+     *  $filter = [$builder->not(
+     *          $builder->eq('name', 'mark'),
+     *  )];
+     * }}}
+     *
+     *
+     * ### Checking if a value is in a list of terms
+     *
+     * {{{
+     *       $filter = $builder->parse([
+     *           'name in' => ['jose', 'mark']
+     *       ]);
+     *
+     *       // Equivalent to:
+     *       $filter = [$builder->in('name', ['jose', 'mark'])]
+     * }}}
+     *
+     * The list of supported operators is:
+     *
+     * `<`, `>`, `<=`, `>=`, `in`, `not in`, `!=`
+     *
+     * @param array|\Dilab\CakeMongo\Filter\AbstractFilter $conditions The list of conditions to parse.
+     * @return array
+     */
+    public function parse($conditions)
+    {
+
+    }
+
 
 }

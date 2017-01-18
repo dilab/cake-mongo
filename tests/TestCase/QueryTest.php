@@ -194,6 +194,11 @@ class QueryTest extends TestCase
         $this->assertSame(15, $mongoQuery['limit']);
     }
 
+    public function testWhere()
+    {
+
+    }
+
     /**
      * Tests that calling applyOptions() sets parts of the query
      *

@@ -229,6 +229,7 @@ class FilterBuilderTest extends TestCase
     public function testNot()
     {
         $builder = new FilterBuilder;
+
         $result = $builder->not(
             $builder->in('title', ['cake', 'orm'])
         )->toArray();
@@ -238,6 +239,7 @@ class FilterBuilderTest extends TestCase
                 '$not' => ['$in' => ['cake', 'orm']]
             ]
         ];
+
         $this->assertEquals($expected, $result);
     }
 
@@ -249,6 +251,7 @@ class FilterBuilderTest extends TestCase
     public function testNor()
     {
         $builder = new FilterBuilder;
+
         $result = $builder->nor(
             $builder->eq('title', 1),
             $builder->lt('quantity', 20)
@@ -260,6 +263,152 @@ class FilterBuilderTest extends TestCase
                 ['quantity' => ['$lt' => 20]]
             ]
         ];
+
         $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * Tests the exists() filter
+     *
+     * @return void
+     */
+    public function testExists()
+    {
+        $builder = new FilterBuilder;
+
+        $result = $builder->exists('title')->toArray();
+
+        $expected = ['title' => ['$exists' => true]];
+
+        $this->assertEquals($expected, $result);
+    }
+
+
+    /**
+     * Tests the parse() method
+     *
+     * @return void
+     */
+    public function testParseSingleArray()
+    {
+        $this->markTestIncomplete();
+        $builder = new FilterBuilder;
+        $filter = $builder->parse([
+            'name' => 'jose',
+            'age >=' => 29,
+            'age <=' => 50,
+            'salary >' => 50,
+            'salary <' => 60,
+            'interests in' => ['cakephp', 'food'],
+            'interests not in' => ['boring stuff', 'c#'],
+
+            'profile is' => null,
+            'tags is not' => null,
+            'address is' => 'something',
+            'address is not' => 'something else',
+            'last_name !=' => 'gonzalez',
+        ]);
+
+//        $builder->term('name', 'jose'),
+//        $builder->gte('age', 29),
+//        $builder->lte('age', 50),
+//        $builder->gt('salary', 50),
+//        $builder->lt('salary', 60),
+//        $builder->terms('interests', ['cakephp', 'food']),
+//        $builder->not($builder->terms('interests', ['boring stuff', 'c#'])),
+//
+//        $builder->missing('profile'),
+//        $builder->exists('tags'),
+//        $builder->term('address', 'something'),
+//        $builder->not($builder->term('address', 'something else')),
+//        $builder->not($builder->term('last_name', 'gonzalez'))
+
+        $expected = [
+            $builder->eq('name', 'jose'),
+            $builder->gte('age', 29),
+            $builder->lte('age', 50),
+            $builder->gt('salary', 50),
+            $builder->lt('salary', 60),
+            $builder->in('interests', ['cakephp', 'food']),
+            $builder->nin('interests', ['boring stuff', 'c#']),
+        ];
+        $this->assertEquals($expected, $filter);
+    }
+
+    /**
+     * Tests the parse() method for generating or conditions
+     *
+     * @return void
+     */
+    public function testParseOr()
+    {
+        $this->markTestIncomplete();
+
+        $builder = new FilterBuilder;
+        $filter = $builder->parse([
+            'or' => [
+                'name' => 'jose',
+                'age >' => 29
+            ]
+        ]);
+        $expected = [
+            $builder->or(
+                $builder->term('name', 'jose'),
+                $builder->gt('age', 29)
+            )
+        ];
+        $this->assertEquals($expected, $filter);
+    }
+
+    /**
+     * Tests the parse() method for generating and conditions
+     *
+     * @return void
+     */
+    public function testParseAnd()
+    {
+        $this->markTestIncomplete();
+
+        $builder = new FilterBuilder;
+        $filter = $builder->parse([
+            'and' => [
+                'name' => 'jose',
+                'age >' => 29
+            ]
+        ]);
+        $expected = [
+            $builder->and(
+                $builder->term('name', 'jose'),
+                $builder->gt('age', 29)
+            )
+        ];
+        $this->assertEquals($expected, $filter);
+    }
+
+    /**
+     * Tests the parse() method for generating not conditions
+     *
+     * @return void
+     */
+    public function testParseNot()
+    {
+        $this->markTestIncomplete();
+
+        $builder = new FilterBuilder;
+        $filter = $builder->parse([
+            'not' => [
+                'name' => 'jose',
+                'age >' => 29
+            ]
+        ]);
+        $expected = [
+            $builder->not(
+                $builder->and(
+                    $builder->term('name', 'jose'),
+                    $builder->gt('age', 29)
+                )
+            )
+        ];
+        $this->assertEquals($expected, $filter);
     }
 }

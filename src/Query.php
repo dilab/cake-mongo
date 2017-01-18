@@ -4,8 +4,14 @@
 namespace Dilab\CakeMongo;
 
 use Cake\Datasource\QueryTrait;
+use DeepCopy\Filter\Filter;
 use IteratorAggregate;
 
+/**
+ * Class Query
+ * @package Dilab\CakeMongo
+ *
+ */
 class Query implements IteratorAggregate
 {
     use QueryTrait;
@@ -256,6 +262,53 @@ class Query implements IteratorAggregate
         }
 
         return $this->_mongoQuery;
+    }
+
+    /**
+     * Sets the filter to use in a Query object. Filters added using this method
+     * will be stacked on a $and filter and applied to the filter part of a query.
+     *
+     * There are several way in which you can use this method. The easiest one is by passing
+     * a simple array of conditions:
+     *
+     * {{{
+     *   // Generates a {"name": "jose"} filter
+     *   $query->where(['name' => 'jose']);
+     * }}}
+     *
+     * You can have as many conditions in the array as you'd like, Operators are also allowed in
+     * the field side of the array:
+     *
+     * {{{
+     *   $query->where(['name' => 'jose', 'age >' => 30, 'interests in' => ['php', 'cake']);
+     * }}}
+     *
+     * You can read about the available operators and how they translate to MongoDB
+     * filters in the `Dilab\CakeMongo\FilterBuilder::parse()` method documentation.
+     *
+     * Additionally, it is possible to use a closure as first argument. The closure will receive
+     * a FilterBuilder instance, that you can use for creating arbitrary filter combinations:
+     *
+     * {{{
+     *   $query->where(function ($builder) {
+     *    return $builder->and($builder->gt('age', 10), $builder->in(['name']));
+     *   });
+     * }}}
+     *
+     * Finally, you can pass any already built filters as first argument:
+     *
+     * {{{
+     *   $query->where(new \Dilab\CakeMongo\ComparisionFilter('price', 'gte', 10));
+     * }}{
+     *
+     * @param array|callable|\Dilab\CakeMongo\AbstractFilter $conditions The list of conditions.
+     * @param bool $overwrite Whether or not to replace previous filters.
+     * @return $this
+     * @see \Dilab\CakeMongo\FilterBuilder
+     */
+    public function where($conditions, $overwrite)
+    {
+
     }
 
 

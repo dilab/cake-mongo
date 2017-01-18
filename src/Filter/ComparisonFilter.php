@@ -4,7 +4,7 @@
 namespace Dilab\CakeMongo\Filter;
 
 
-class ComparisonFilter
+class ComparisonFilter extends AbstractFilter
 {
     private $_field;
 
