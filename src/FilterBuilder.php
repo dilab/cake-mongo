@@ -3,6 +3,7 @@
 
 namespace Dilab\CakeMongo;
 
+use Dilab\CakeMongo\Filter\AbstractFilter;
 use Dilab\CakeMongo\Filter\ComparisonFilter;
 use Dilab\CakeMongo\Filter\ElementFilter;
 use Dilab\CakeMongo\Filter\LogicFilter;
@@ -325,15 +326,94 @@ class FilterBuilder
      *
      * The list of supported operators is:
      *
-     * `<`, `>`, `<=`, `>=`, `in`, `not in`, `!=`
+     * `<`, `>`, `<=`, `>=`, `in`, `not in`, `!=`, 'is', 'is not'
      *
      * @param array|\Dilab\CakeMongo\Filter\AbstractFilter $conditions The list of conditions to parse.
      * @return array
      */
     public function parse($conditions)
     {
+//        if ($conditions instanceof AbstractFilter) {
+//            return $conditions;
+//        }
 
+        $result = [];
+
+        foreach ($conditions as $k => $c) {
+            $result[] = $this->_parseFilter($k, $c);
+        }
+
+        return $result;
     }
 
+
+    /**
+     * Parses a field name containing an operator into a Filter object.
+     *
+     * @param string $field The filed name containing the operator
+     * @param mixed $value The value to pass to the filter
+     * @return \Dilab\CakeMongo\AbstractFilter
+     */
+    protected function _parseFilter($field, $value)
+    {
+        $operator = '=';
+        $parts = explode(' ', trim($field), 2);
+
+        if (count($parts) > 1) {
+            list($field, $operator) = $parts;
+        }
+
+        $operator = strtolower(trim($operator));
+
+        if ($operator === '>') {
+            return $this->gt($field, $value);
+        }
+
+        if ($operator === '>=') {
+            return $this->gte($field, $value);
+        }
+
+        if ($operator === '<') {
+            return $this->lt($field, $value);
+        }
+
+        if ($operator === '<=') {
+            return $this->lte($field, $value);
+        }
+
+        if (in_array($operator, ['in', 'not in'])) {
+            $value = (array)$value;
+        }
+
+        if ($operator === 'in') {
+            return $this->in($field, $value);
+        }
+
+        if ($operator === 'not in') {
+            return $this->nin($field, $value);
+        }
+
+        if ($operator === 'is' && $value === null) {
+            return $this->missing($field);
+        }
+
+        if ($operator === 'is not' && $value === null) {
+            return $this->exists($field);
+        }
+
+        if ($operator === 'is' && $value !== null) {
+            return $this->eq($field, $value);
+        }
+
+        if ($operator === 'is not' && $value !== null) {
+            return $this->not($this->eq($field, $value));
+        }
+
+        if ($operator === '!=') {
+            return $this->not($this->eq($field, $value));
+        }
+
+        return $this->eq($field, $value);
+    }
 
 }

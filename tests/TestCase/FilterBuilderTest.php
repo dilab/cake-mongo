@@ -299,7 +299,6 @@ class FilterBuilderTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-
     /**
      * Tests the parse() method
      *
@@ -307,7 +306,6 @@ class FilterBuilderTest extends TestCase
      */
     public function testParseSingleArray()
     {
-        $this->markTestIncomplete();
         $builder = new FilterBuilder;
         $filter = $builder->parse([
             'name' => 'jose',
@@ -317,27 +315,12 @@ class FilterBuilderTest extends TestCase
             'salary <' => 60,
             'interests in' => ['cakephp', 'food'],
             'interests not in' => ['boring stuff', 'c#'],
-
             'profile is' => null,
             'tags is not' => null,
             'address is' => 'something',
             'address is not' => 'something else',
             'last_name !=' => 'gonzalez',
         ]);
-
-//        $builder->term('name', 'jose'),
-//        $builder->gte('age', 29),
-//        $builder->lte('age', 50),
-//        $builder->gt('salary', 50),
-//        $builder->lt('salary', 60),
-//        $builder->terms('interests', ['cakephp', 'food']),
-//        $builder->not($builder->terms('interests', ['boring stuff', 'c#'])),
-//
-//        $builder->missing('profile'),
-//        $builder->exists('tags'),
-//        $builder->term('address', 'something'),
-//        $builder->not($builder->term('address', 'something else')),
-//        $builder->not($builder->term('last_name', 'gonzalez'))
 
         $expected = [
             $builder->eq('name', 'jose'),
@@ -347,6 +330,11 @@ class FilterBuilderTest extends TestCase
             $builder->lt('salary', 60),
             $builder->in('interests', ['cakephp', 'food']),
             $builder->nin('interests', ['boring stuff', 'c#']),
+            $builder->missing('profile'),
+            $builder->exists('tags'),
+            $builder->eq('address', 'something'),
+            $builder->not($builder->eq('address', 'something else')),
+            $builder->not($builder->eq('last_name', 'gonzalez'))
         ];
         $this->assertEquals($expected, $filter);
     }
