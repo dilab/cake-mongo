@@ -32,6 +32,16 @@ class ElementFilter extends AbstractFilter
             ];
 
         }
+
+        if ('missing' == $this->_type) {
+
+            return [
+                $this->_field => [
+                    '$exists' => false
+                ]
+            ];
+
+        }
     }
 
 

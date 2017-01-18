@@ -283,6 +283,22 @@ class FilterBuilderTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * Tests the missing() filter
+     *
+     * @return void
+     */
+    public function testMissing()
+    {
+        $builder = new FilterBuilder;
+
+        $result = $builder->missing('title')->toArray();
+
+        $expected = ['title' => ['$exists' => false]];
+
+        $this->assertEquals($expected, $result);
+    }
+
 
     /**
      * Tests the parse() method

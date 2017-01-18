@@ -250,6 +250,18 @@ class FilterBuilder
     }
 
     /**
+     *
+     * Return a filter that matches documents that do not the specified field.
+     *
+     * @param $field
+     * @return ElementFilter
+     */
+    public function missing($field)
+    {
+        return new ElementFilter('missing', $field);
+    }
+
+    /**
      * Converts an array into a single array of filter objects
      *
      * ### Parsing a single array:
