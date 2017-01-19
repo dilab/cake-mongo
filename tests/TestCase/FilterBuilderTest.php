@@ -346,7 +346,6 @@ class FilterBuilderTest extends TestCase
      */
     public function testParseOr()
     {
-        $this->markTestIncomplete();
 
         $builder = new FilterBuilder;
         $filter = $builder->parse([
@@ -357,7 +356,7 @@ class FilterBuilderTest extends TestCase
         ]);
         $expected = [
             $builder->or(
-                $builder->term('name', 'jose'),
+                $builder->eq('name', 'jose'),
                 $builder->gt('age', 29)
             )
         ];
@@ -371,8 +370,6 @@ class FilterBuilderTest extends TestCase
      */
     public function testParseAnd()
     {
-        $this->markTestIncomplete();
-
         $builder = new FilterBuilder;
         $filter = $builder->parse([
             'and' => [
@@ -382,7 +379,7 @@ class FilterBuilderTest extends TestCase
         ]);
         $expected = [
             $builder->and(
-                $builder->term('name', 'jose'),
+                $builder->eq('name', 'jose'),
                 $builder->gt('age', 29)
             )
         ];
@@ -396,8 +393,6 @@ class FilterBuilderTest extends TestCase
      */
     public function testParseNot()
     {
-        $this->markTestIncomplete();
-
         $builder = new FilterBuilder;
         $filter = $builder->parse([
             'not' => [
@@ -406,13 +401,38 @@ class FilterBuilderTest extends TestCase
             ]
         ]);
         $expected = [
-            $builder->not(
-                $builder->and(
-                    $builder->term('name', 'jose'),
-                    $builder->gt('age', 29)
-                )
+            $builder->nor(
+                $builder->eq('name', 'jose'),
+                $builder->gt('age', 29)
             )
         ];
+        $this->assertEquals($expected, $filter);
+    }
+
+    /**
+     * Tests the parse() method for generating mixed conditions
+     *
+     * @return void
+     */
+    public function testParseMix()
+    {
+        $builder = new FilterBuilder;
+        $filter = $builder->parse([
+            $builder->eq('name', 'jose'),
+            'not' => [
+                'name' => 'xu',
+            ]
+        ]);
+        $expected = [
+            $builder->eq('name', 'jose'),
+            $builder->nor(
+                $builder->eq('name', 'xu')
+            )
+        ];
+        $this->assertEquals($expected, $filter);
+
+        $filter = $builder->parse($builder->eq('name', 'jose'));
+        $expected = $builder->eq('name', 'jose');
         $this->assertEquals($expected, $filter);
     }
 }

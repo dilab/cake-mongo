@@ -185,6 +185,20 @@ class FilterBuilder
     }
 
     /**
+     * Returns a filter that is a logical NOR returns all documents that fail to match both clauses.
+     *
+     * @return LogicFilter
+     */
+    // @codingStandardsIgnoreStart
+    public function nor_()
+    {
+        // @codingStandardsIgnoreEnd
+        $filters = func_get_args();
+
+        return $this->_logic('nor', $filters);
+    }
+
+    /**
      * Helps calling the `and()` and `or()` methods transparently.
      *
      * @param string $method The method name.
@@ -193,7 +207,7 @@ class FilterBuilder
      */
     public function __call($method, $args)
     {
-        if (in_array($method, ['and', 'or'])) {
+        if (in_array($method, ['and', 'or', 'nor'])) {
             return call_user_func_array([$this, $method . '_'], $args);
         }
         throw new \BadMethodCallException('Cannot build filter ' . $method);
@@ -210,19 +224,6 @@ class FilterBuilder
         return new LogicFilter('not', [$filter]);
     }
 
-    /**
-     * Returns a filter that is a logical NOR returns all documents that fail to match both clauses.
-     *
-     * @return LogicFilter
-     */
-    // @codingStandardsIgnoreStart
-    public function nor()
-    {
-        // @codingStandardsIgnoreEnd
-        $filters = func_get_args();
-
-        return $this->_logic('nor', $filters);
-    }
 
     /**
      * Helps to build logic operator
@@ -308,7 +309,7 @@ class FilterBuilder
      *
      *  // Equivalent to:
      *  $filter = [$builder->not(
-     *          $builder->eq('name', 'mark'),
+     *      $builder->eq('name', 'mark'),
      *  )];
      * }}}
      *
@@ -333,19 +334,46 @@ class FilterBuilder
      */
     public function parse($conditions)
     {
-//        if ($conditions instanceof AbstractFilter) {
-//            return $conditions;
-//        }
+        if ($conditions instanceof AbstractFilter) {
+            return $conditions;
+        }
 
         $result = [];
 
         foreach ($conditions as $k => $c) {
-            $result[] = $this->_parseFilter($k, $c);
+
+            $numericKey = is_numeric($k);
+
+            $operator = strtolower($k);
+
+            if ($c instanceof AbstractFilter) {
+                $result[] = $c;
+                continue;
+            }
+
+            if ($operator === 'and') {
+                $result[] = $this->__call('and', $this->parse($c));
+                continue;
+            }
+
+            if ($operator === 'or') {
+                $result[] = $this->__call('or', $this->parse($c));
+                continue;
+            }
+
+            if ($operator === 'not') {
+                $result[] = $this->__call('nor', $this->parse($c));
+                continue;
+            }
+
+            if (!$numericKey) {
+                $result[] = $this->_parseFilter($k, $c);
+            }
+
         }
 
         return $result;
     }
-
 
     /**
      * Parses a field name containing an operator into a Filter object.
