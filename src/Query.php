@@ -4,7 +4,6 @@
 namespace Dilab\CakeMongo;
 
 use Cake\Datasource\QueryTrait;
-use DeepCopy\Filter\Filter;
 use IteratorAggregate;
 
 /**
@@ -24,19 +23,13 @@ class Query implements IteratorAggregate
      */
     protected $_parts = [
         'fields' => [],
-        'preFilter' => null,
-        'postFilter' => null,
-        'highlight' => null,
-        'query' => null,
+        'filter' => [],
         'order' => [],
         'limit' => null,
-        'offset' => null,
-        'aggregations' => []
+        'offset' => null
     ];
 
-    protected $_mongoQuery = [
-        'projection' => []
-    ];
+    protected $_mongoQuery = [];
 
     /**
      * Query constructor.
@@ -49,7 +42,25 @@ class Query implements IteratorAggregate
 
     public function applyOptions(array $options)
     {
-        // TODO: Implement applyOptions() method.
+        $valid = [
+            'fields' => 'select',
+            'conditions' => 'where',
+            'order' => 'order',
+            'limit' => 'limit',
+            'offset' => 'offset',
+            'page' => 'page',
+        ];
+
+        ksort($options);
+        foreach ($options as $option => $values) {
+            if (isset($valid[$option]) && isset($values)) {
+                $this->{$valid[$option]}($values);
+            } else {
+                $this->_options[$option] = $values;
+            }
+        }
+
+        return $this;
     }
 
     protected function _execute()
@@ -259,6 +270,10 @@ class Query implements IteratorAggregate
 
             }, []);
 
+        }
+
+        if ($this->_parts['filter']) {
+            $this->_mongoQuery['filter'] = $this->_parts['filter'];
         }
 
         return $this->_mongoQuery;

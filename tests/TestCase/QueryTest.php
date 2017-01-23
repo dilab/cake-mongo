@@ -194,9 +194,61 @@ class QueryTest extends TestCase
         $this->assertSame(15, $mongoQuery['limit']);
     }
 
+    /**
+     * Tests the where() method
+     *
+     * @return void
+     */
     public function testWhere()
     {
+        $collection = new Collection();
+        $query = new Query($collection);
+        $query->where([
+            'name.first' => 'jose',
+            'age >' => 29,
+            'or' => [
+                'tags in' => ['cake', 'php'],
+                'interests not in' => ['c#', 'java']
+            ]
+        ]);
 
+        $compiled = $query->compileQuery()->toArray();
+        $filter = $compiled['filter'];
+
+        $expected = ['name.first' => 'jose'];
+        $this->assertEquals($expected, $filter[0]);
+
+        $expected = ['age' => ['$gt' => 29]];
+        $this->assertEquals($expected, $filter[1]);
+
+        $expected = ['tags' => ['$in' => ['cake', 'php']]];
+        $this->assertEquals($expected, $filter[2]['$or'][0]);
+
+        $expected = ['interests' => ['$nin' => ['c#', 'java']]];
+        $this->assertEquals($expected, $filter[2]['or'][1]);
+
+        $query->where(function (FilterBuilder $builder) {
+            return $builder->and(
+                $builder->eq('another.thing', 'value'),
+                $builder->exists('stuff')
+            );
+        });
+
+        $compiled = $query->compileQuery()->toArray();
+        $filter = $compiled['filter'];
+        $expected = [
+            '$and' => [
+                ['another.thing' => 'value'],
+                ['exists' => ['$exists' => true]],
+            ]
+        ];
+        $this->assertEquals($expected, $filter[3]);
+
+        $query->where(['name.first' => 'jose'], true);
+        $compiled = $query->compileQuery()->toArray();
+        $filter = $compiled['filter'];
+        $expected = ['name.first' => 'jose'];
+        $this->assertEquals([$expected], $filter[0]);
     }
 
     /**
@@ -219,25 +271,17 @@ class QueryTest extends TestCase
         ]);
 
         $result = [
-            'projection' => ['id'=>1, 'name'=>1],
+            'projection' => ['id' => 1, 'name' => 1],
             'limit' => 10,
-            'query' => [
-                'filtered' => [
-                    'filter' => [
-                        'bool' => [
-                            'must' => [[
-                                'range' => [
-                                    'created' => [
-                                        'gte' => '2013-01-01'
-                                    ]
-                                ]
-                            ]]
-                        ]
-                    ]
+            'filter' => [
+                'created' => [
+                    '$gte' => '2013-01-01'
                 ]
             ]
         ];
 
-        $this->assertSame($result, $query->compileQuery());
+        $mongoQuery = $query->compileQuery();
+        $this->assertSame($result, $mongoQuery['filter']->toArray());
     }
+
 }
