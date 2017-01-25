@@ -100,11 +100,6 @@ class Query implements IteratorAggregate
         return $this;
     }
 
-    protected function _execute()
-    {
-        // TODO: Implement _execute() method.
-    }
-
     /**
      * Adds fields to be selected from _source.
      *
@@ -374,5 +369,23 @@ class Query implements IteratorAggregate
             array_merge($this->_parts['filter'], (new FilterBuilder)->parse($conditions));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return \Dilab\CakeMongo\Query
+     */
+    public function find($type = 'all', $options = [])
+    {
+        return $this->_repository->callFinder($type, $this, $options);
+    }
 
+    /**
+     * Executes the query.
+     *
+     * @return \Dilab\CakeMongo\ResultSet The results of the query
+     */
+    protected function _execute()
+    {
+        // TODO: Implement _execute() method.
+    }
 }

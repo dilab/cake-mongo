@@ -24,30 +24,6 @@ class QueryTest extends TestCase
     }
 
     /**
-     * Test that chained finders will work
-     *
-     * @return void
-     */
-    public function testChainedFinders()
-    {
-        $this->markTestIncomplete();
-        $collection = new Collection();
-        $query = new Query($collection);
-        $this->assertInstanceOf(Query::class, $query->find()->find());
-    }
-
-    /**
-     * Tests that executing a query means executing a search against the associated
-     * Collection and decorates the internal ResultSet
-     *
-     * @return void
-     */
-    public function testAll()
-    {
-        $this->markTestIncomplete();
-    }
-
-    /**
      * Tests that calling select() sets the field to select from _source
      *
      * @return void
@@ -287,6 +263,30 @@ class QueryTest extends TestCase
 
         $mongoQuery = $query->compileQuery();
         $this->assertEquals($result, $mongoQuery);
+    }
+
+    /**
+     * Test that chained finders will work
+     *
+     * @return void
+     */
+    public function testChainedFinders()
+    {
+        $this->markTestIncomplete();
+        $collection = new Collection();
+        $query = new Query($collection);
+        $this->assertInstanceOf(Query::class, $query->find()->find());
+    }
+
+    /**
+     * Tests that executing a query means executing a search against the associated
+     * Collection and decorates the internal ResultSet
+     *
+     * @return void
+     */
+    public function testAll()
+    {
+        $this->markTestIncomplete();
     }
 
 }
