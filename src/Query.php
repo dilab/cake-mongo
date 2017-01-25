@@ -4,6 +4,7 @@
 namespace Dilab\CakeMongo;
 
 use Cake\Datasource\QueryTrait;
+use Dilab\CakeMongo\Filter\AbstractFilter;
 use IteratorAggregate;
 
 /**
@@ -273,7 +274,9 @@ class Query implements IteratorAggregate
         }
 
         if ($this->_parts['filter']) {
-            $this->_mongoQuery['filter'] = $this->_parts['filter'];
+            $this->_mongoQuery['filter'] = array_map(function (AbstractFilter $filter) {
+                return $filter->toArray();
+            }, $this->_parts['filter']);
         }
 
         return $this->_mongoQuery;
@@ -281,7 +284,7 @@ class Query implements IteratorAggregate
 
     /**
      * Sets the filter to use in a Query object. Filters added using this method
-     * will be stacked on a $and filter and applied to the filter part of a query.
+     * will be applied to the filter part of a query.
      *
      * There are several way in which you can use this method. The easiest one is by passing
      * a simple array of conditions:
@@ -321,9 +324,18 @@ class Query implements IteratorAggregate
      * @return $this
      * @see \Dilab\CakeMongo\FilterBuilder
      */
-    public function where($conditions, $overwrite)
+    public function where($conditions, $overwrite = false)
     {
+        if (is_callable($conditions)) {
+            $conditions = [call_user_func($conditions, new FilterBuilder)];
+        }
 
+        if ($overwrite) {
+            $this->_parts['filter'] = (new FilterBuilder)->parse($conditions);
+        }
+
+        $this->_parts['filter'] =
+            array_merge($this->_parts['filter'], (new FilterBuilder)->parse($conditions));
     }
 
 

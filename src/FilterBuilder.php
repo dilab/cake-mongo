@@ -224,7 +224,6 @@ class FilterBuilder
         return new LogicFilter('not', [$filter]);
     }
 
-
     /**
      * Helps to build logic operator
      *

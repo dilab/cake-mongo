@@ -212,7 +212,7 @@ class QueryTest extends TestCase
             ]
         ]);
 
-        $compiled = $query->compileQuery()->toArray();
+        $compiled = $query->compileQuery();
         $filter = $compiled['filter'];
 
         $expected = ['name.first' => 'jose'];
@@ -225,7 +225,7 @@ class QueryTest extends TestCase
         $this->assertEquals($expected, $filter[2]['$or'][0]);
 
         $expected = ['interests' => ['$nin' => ['c#', 'java']]];
-        $this->assertEquals($expected, $filter[2]['or'][1]);
+        $this->assertEquals($expected, $filter[2]['$or'][1]);
 
         $query->where(function (FilterBuilder $builder) {
             return $builder->and(
@@ -234,21 +234,21 @@ class QueryTest extends TestCase
             );
         });
 
-        $compiled = $query->compileQuery()->toArray();
+        $compiled = $query->compileQuery();
         $filter = $compiled['filter'];
         $expected = [
             '$and' => [
                 ['another.thing' => 'value'],
-                ['exists' => ['$exists' => true]],
+                ['stuff' => ['$exists' => true]],
             ]
         ];
         $this->assertEquals($expected, $filter[3]);
 
-        $query->where(['name.first' => 'jose'], true);
-        $compiled = $query->compileQuery()->toArray();
+        $query->where(['name.first' => 'xu'], true);
+        $compiled = $query->compileQuery();
         $filter = $compiled['filter'];
-        $expected = ['name.first' => 'jose'];
-        $this->assertEquals([$expected], $filter[0]);
+        $expected = ['name.first' => 'xu'];
+        $this->assertEquals($expected, $filter[0]);
     }
 
     /**

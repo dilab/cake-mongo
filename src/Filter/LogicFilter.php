@@ -39,7 +39,7 @@ class LogicFilter extends AbstractFilter
         }
 
         return [
-            '$' . $this->_logic => array_map(function (ComparisonFilter $filter) {
+            '$' . $this->_logic => array_map(function (AbstractFilter $filter) {
                 return $filter->toArray();
             }, $this->_filters)
         ];
