@@ -41,6 +41,41 @@ class Query implements IteratorAggregate
         $this->repository($repository);
     }
 
+    /**
+     * Populates or adds parts to current query clauses using an array.
+     * This is handy for passing all query clauses at once. The option array accepts:
+     *
+     * - fields: Maps to the select method
+     * - conditions: Maps to the where method
+     * - order: Maps to the order method
+     * - limit: Maps to the limit method
+     * - offset: Maps to the offset method
+     * - page: Maps to the page method
+     *
+     * ### Example:
+     *
+     * ```
+     * $query->applyOptions([
+     *   'fields' => ['id', 'name'],
+     *   'conditions' => [
+     *     'created >=' => '2013-01-01'
+     *   ],
+     *   'limit' => 10
+     * ]);
+     * ```
+     *
+     * Is equivalent to:
+     *
+     * ```
+     *  $query
+     *  ->select(['id', 'name'])
+     *  ->where(['created >=' => '2013-01-01'])
+     *  ->limit(10)
+     * ```
+     *
+     * @param array $options list of query clauses to apply new parts to.
+     * @return $this
+     */
     public function applyOptions(array $options)
     {
         $valid = [
