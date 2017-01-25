@@ -53,6 +53,7 @@ class Query implements IteratorAggregate
         ];
 
         ksort($options);
+
         foreach ($options as $option => $values) {
             if (isset($valid[$option]) && isset($values)) {
                 $this->{$valid[$option]}($values);

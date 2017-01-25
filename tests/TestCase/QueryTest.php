@@ -258,7 +258,6 @@ class QueryTest extends TestCase
      */
     public function testApplyOptions()
     {
-        $this->markTestIncomplete();
         $collection = new Collection();
         $query = new Query($collection);
 
@@ -267,21 +266,27 @@ class QueryTest extends TestCase
             'conditions' => [
                 'created >=' => '2013-01-01'
             ],
-            'limit' => 10
+            'limit' => 10,
+            'order' => ['name' => 'des'],
         ]);
 
         $result = [
             'projection' => ['id' => 1, 'name' => 1],
             'limit' => 10,
             'filter' => [
-                'created' => [
-                    '$gte' => '2013-01-01'
+                [
+                    'created' => [
+                        '$gte' => '2013-01-01'
+                    ]
                 ]
+            ],
+            'sort' => [
+                'name' => 1
             ]
         ];
 
         $mongoQuery = $query->compileQuery();
-        $this->assertSame($result, $mongoQuery['filter']->toArray());
+        $this->assertEquals($result, $mongoQuery);
     }
 
 }
