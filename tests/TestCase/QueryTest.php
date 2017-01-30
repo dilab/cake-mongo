@@ -272,7 +272,6 @@ class QueryTest extends TestCase
      */
     public function testChainedFinders()
     {
-        $this->markTestIncomplete();
         $collection = new Collection();
         $query = new Query($collection);
         $this->assertInstanceOf(Query::class, $query->find()->find());
@@ -280,13 +279,59 @@ class QueryTest extends TestCase
 
     /**
      * Tests that executing a query means executing a search against the associated
-     * Collection and decorates the internal ResultSet
+     * Type and decorates the internal ResultSet
      *
      * @return void
      */
     public function testAll()
     {
         $this->markTestIncomplete();
+
+        $connection = $this->getMock(
+            'Dilab\CakeMongo\Datasource\Connection',
+            ['getIndex']
+        );
+        $type = new Collection([
+            'name' => 'foo',
+            'connection' => $connection
+        ]);
+
+        $index = $this->getMockBuilder('Elastica\Index')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $internalType = $this->getMockBuilder('Elastica\Type')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $connection->expects($this->once())
+            ->method('getIndex')
+            ->will($this->returnValue($index));
+
+        $index->expects($this->once())
+            ->method('getType')
+            ->will($this->returnValue($internalType));
+
+        $result = $this->getMockBuilder('Elastica\ResultSet')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $internalQuery = $this->getMockBuilder('Elastica\Query')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $internalType->expects($this->once())
+            ->method('search')
+            ->will($this->returnCallback(function ($query) use ($result) {
+                $this->assertEquals(new \Elastica\Query, $query);
+
+                return $result;
+            }));
+
+        $query = new Query($type);
+        $resultSet = $query->all();
+        $this->assertInstanceOf('Cake\ElasticSearch\ResultSet', $resultSet);
+        $this->assertSame($result, $resultSet->getInnerIterator());
     }
 
 }

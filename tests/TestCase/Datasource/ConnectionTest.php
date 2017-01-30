@@ -21,6 +21,6 @@ class ConnectionTest extends TestCase
 
     public function testDummy()
     {
-        $this->markTestSkipped();
+        $this->assertTrue(false);
     }
 }

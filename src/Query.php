@@ -386,6 +386,14 @@ class Query implements IteratorAggregate
      */
     protected function _execute()
     {
-        // TODO: Implement _execute() method.
+        $connection = $this->_repository->connection();
+
+        $name = $this->_repository->name();
+
+        $collection = $connection->getIndex()->getCollection($name);
+
+        $query = $this->compileQuery();
+
+        return new ResultSet($collection->search($query, $this->_searchOptions), $this);
     }
 }
