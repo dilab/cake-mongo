@@ -5,9 +5,16 @@ namespace Dilab\CakeMongo\Datasource;
 
 
 use Cake\Datasource\ConnectionInterface;
+use MongoDB\Client;
 
-class Connection implements ConnectionInterface
+class Connection extends Client implements ConnectionInterface
 {
+
+    public function getDatabase()
+    {
+
+    }
+
     public function configName()
     {
         // TODO: Implement configName() method.
