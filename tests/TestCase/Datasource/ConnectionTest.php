@@ -1,6 +1,8 @@
 <?php
 
 
+use Cake\Datasource\ConnectionManager;
+use Cake\Log\Log;
 use Cake\TestSuite\TestCase;
 use Dilab\CakeMongo\Datasource\Connection;
 
@@ -15,15 +17,15 @@ class ConnectionTest extends TestCase
     public function testGetDatabase()
     {
         $connection = new Connection();
-        $index = $connection->getDatabase();
-        $this->assertEquals('test', $index->getDatabaseName());
+        $database = $connection->getDatabase();
+        $this->assertEquals('test', $database->getDatabaseName());
 
-        $connection = new Connection(['database' => 'foobar']);
-        $index = $connection->getDatabase();
-        $this->assertEquals('foobar', $index->getDatabaseName());
+        $connection = new Connection();
+        $database = $connection->getDatabase('foobar');
+        $this->assertEquals('foobar', $database->getDatabaseName());
 
-        $index = $connection->selectDatabase('baz');
-        $this->assertEquals('baz', $index->getDatabaseName());
+        $database = $connection->selectDatabase('baz');
+        $this->assertEquals('baz', $database->getDatabaseName());
     }
 
     /**
@@ -54,7 +56,7 @@ class ConnectionTest extends TestCase
 
         $connection = ConnectionManager::get('test');
         $connection->logQueries(true);
-        $result = $connection->request('_stats');
+        $result = $connection->listDatabases();
         $connection->logQueries(false);
 
         $this->assertNotEmpty($result);
