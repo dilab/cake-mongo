@@ -33,10 +33,6 @@ class Connection extends Client implements ConnectionInterface
      */
     public function __construct(array $config = [], $callback = null)
     {
-        $config += [
-            'uri' => 'mongodb://127.0.0.1/'
-        ];
-
         if (isset($config['name'])) {
             $this->configName = $config['name'];
         }
@@ -45,7 +41,9 @@ class Connection extends Client implements ConnectionInterface
             $this->logQueries((bool)$config['log']);
         }
 
-        parent::__construct($config['uri']);
+        $uri = sprintf('mongodb://%s:%s', $config['host'], $config['port']);
+
+        parent::__construct($uri);
     }
 
     public function getDatabase($name = null)

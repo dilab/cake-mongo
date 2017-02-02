@@ -33,7 +33,7 @@ Cache::config('_cake_core_', [
 ]);
 
 if (!getenv('db_dsn')) {
-    putenv('db_dsn=Dilab\CakeMongo\Datasource\Connection://127.0.0.1:9200?index=cake_test_db&driver=Dilab\CakeMongo\Datasource\Connection');
+    putenv('db_dsn=Dilab\CakeMongo\Datasource\Connection://127.0.0.1:27017?database=test&driver=Dilab\CakeMongo\Datasource\Connection');
 }
 
 ConnectionManager::config('test', ['url' => getenv('db_dsn')]);
