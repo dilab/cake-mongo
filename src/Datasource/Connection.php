@@ -33,6 +33,8 @@ class Connection extends Client implements ConnectionInterface
      */
     public function __construct(array $config = [], $callback = null)
     {
+        $config = array_merge(['host' => '127.0.0.1', 'port' => '27017'], $config);
+
         if (isset($config['name'])) {
             $this->configName = $config['name'];
         }
@@ -66,7 +68,7 @@ class Connection extends Client implements ConnectionInterface
      */
     public function config()
     {
-//        return $this->
+        return $this->_config;
     }
 
     /**
@@ -74,7 +76,7 @@ class Connection extends Client implements ConnectionInterface
      */
     public function transactional(callable $transaction)
     {
-        // TODO: Implement transactional() method.
+        return $transaction($this);
     }
 
     /**
@@ -82,7 +84,7 @@ class Connection extends Client implements ConnectionInterface
      */
     public function disableConstraints(callable $operation)
     {
-        // TODO: Implement disableConstraints() method.
+        return $operation($this);
     }
 
     /**
@@ -98,11 +100,14 @@ class Connection extends Client implements ConnectionInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoccl}
      */
     public function logger($instance = null)
     {
-        // TODO: Implement logger() method.
+        if ($instance === null) {
+            return $this->_logger;
+        }
+        $this->_logger = $instance;
     }
 
 
