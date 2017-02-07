@@ -43,23 +43,4 @@ class ConnectionTest extends TestCase
         $this->assertTrue($connection->logQueries());
     }
 
-    /**
-     * Ensure that logging queries works.
-     *
-     * @return void
-     */
-    public function testQueryLogging()
-    {
-        $this->markTestSkipped();
-        $logger = $this->getMockBuilder('Cake\Log\Engine\BaseLog')->disableOriginalConstructor()->getMock();
-        $logger->expects($this->once())->method('log');
-        Log::config('cakemongo', $logger);
-
-        $connection = ConnectionManager::get('test');
-        $connection->logQueries(true);
-        $result = $connection->listDatabases();
-        $connection->logQueries(false);
-
-        $this->assertNotEmpty($result);
-    }
 }
