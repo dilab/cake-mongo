@@ -279,59 +279,52 @@ class QueryTest extends TestCase
 
     /**
      * Tests that executing a query means executing a search against the associated
-     * Type and decorates the internal ResultSet
+     * Collection and decorates the internal ResultSet
      *
      * @return void
      */
     public function testAll()
     {
-        $this->markTestIncomplete();
+        $connection = $this->getMockBuilder(
+            'Dilab\CakeMongo\Datasource\Connection'
+        )->setMethods(['getDatabase'])->getMock();
 
-        $connection = $this->getMock(
-            'Dilab\CakeMongo\Datasource\Connection',
-            ['getIndex']
-        );
-        $type = new Collection([
+        $collection = new Collection([
             'name' => 'foo',
             'connection' => $connection
         ]);
 
-        $index = $this->getMockBuilder('Elastica\Index')
+        $database = $this->getMockBuilder('MongoDB\Database')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $internalType = $this->getMockBuilder('Elastica\Type')
+        $internalCollection = $this->getMockBuilder('MongoDB\Collection')
             ->disableOriginalConstructor()
             ->getMock();
 
         $connection->expects($this->once())
-            ->method('getIndex')
-            ->will($this->returnValue($index));
+            ->method('getDatabase')
+            ->will($this->returnValue($database));
 
-        $index->expects($this->once())
-            ->method('getType')
-            ->will($this->returnValue($internalType));
+        $database->expects($this->once())
+            ->method('selectCollection')
+            ->will($this->returnValue($internalCollection));
 
-        $result = $this->getMockBuilder('Elastica\ResultSet')
+        $result = $this->getMockBuilder('\Traversable')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $internalQuery = $this->getMockBuilder('Elastica\Query')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $internalType->expects($this->once())
-            ->method('search')
+        $internalCollection->expects($this->once())
+            ->method('find')
             ->will($this->returnCallback(function ($query) use ($result) {
-                $this->assertEquals(new \Elastica\Query, $query);
-
+                $this->assertTrue(is_array($query));
                 return $result;
             }));
 
-        $query = new Query($type);
+        $query = new Query($collection);
         $resultSet = $query->all();
-        $this->assertInstanceOf('Cake\ElasticSearch\ResultSet', $resultSet);
-        $this->assertSame($result, $resultSet->getInnerIterator());
+        $this->assertInstanceOf('Dilab\CakeMongo\ResultSet', $resultSet);
+        $this->assertInstanceOf(\Traversable::class, $resultSet->getInnerIterator());
     }
 
 }

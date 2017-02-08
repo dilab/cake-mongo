@@ -5,6 +5,7 @@ namespace Dilab\CakeMongo;
 
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\RepositoryInterface;
+use Cake\Utility\Inflector;
 
 /**
  * Base class for mapping collections in a database.
@@ -16,6 +17,82 @@ use Cake\Datasource\RepositoryInterface;
  */
 class Collection implements RepositoryInterface
 {
+
+    /**
+     * Connection instance
+     *
+     * @var \Dilab\CakeMongo\Datasource\Connection
+     */
+    protected $_connection;
+
+    /**
+     * The name of the MongoDB collection this class represents
+     *
+     * @var string
+     */
+    protected $_name;
+
+    /**
+     * Constructor
+     *
+     * ### Options
+     *
+     * - `connection` The Connection instance.
+     * - `name` The name of the collection. If this isn't set the name will be inferred from the class name.
+     *
+     *
+     * @param array $config The configuration options, see above.
+     */
+    public function __construct(array $config = [])
+    {
+        if (!empty($config['connection'])) {
+            $this->connection($config['connection']);
+        }
+
+        if (!empty($config['name'])) {
+            $this->name($config['name']);
+        }
+    }
+
+    /**
+     * Returns the connection instance or sets a new one
+     *
+     * @param \Dilab\CakeMongo\Datasource\Connection $conn the new connection instance
+     * @return \Dilab\CakeMongo\Datasource\Connection
+     */
+    public function connection($conn = null)
+    {
+        if ($conn === null) {
+            return $this->_connection;
+        }
+
+        return $this->_connection = $conn;
+    }
+
+    /**
+     * Returns the collection name name or sets a new one
+     *
+     * @param string $name the new type name
+     * @return string
+     */
+    public function name($name = null)
+    {
+        if ($name !== null) {
+            $this->_name = $name;
+        }
+
+        if ($this->_name === null) {
+            $name = namespaceSplit(get_class($this));
+            $name = substr(end($name), 0, -4);
+            if (empty($name)) {
+                $name = '*';
+            }
+            $this->_name = Inflector::underscore($name);
+        }
+
+        return $this->_name;
+    }
+
 
     /**
      * Calls a finder method directly and applies it to the passed query

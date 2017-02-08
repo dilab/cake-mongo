@@ -390,7 +390,7 @@ class Query implements IteratorAggregate
 
         $name = $this->_repository->name();
 
-        $collection = $connection->getIndex()->getCollection($name);
+        $collection = $connection->getDatabase()->selectCollection($name);
 
         $query = $this->compileQuery();
 
