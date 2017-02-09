@@ -327,7 +327,7 @@ class QueryTest extends TestCase
         $query = new Query($collection);
         $resultSet = $query->all();
         $this->assertInstanceOf('Dilab\CakeMongo\ResultSet', $resultSet);
-//        $this->assertInstanceOf(\Traversable::class, $resultSet->getInnerIterator());
+        $this->assertInstanceOf(\Traversable::class, $resultSet->getInnerIterator());
     }
 
 }
