@@ -33,6 +33,13 @@ class Query implements IteratorAggregate
     protected $_mongoQuery = [];
 
     /**
+     * Additional options for Collection::find()
+     *
+     * @var array
+     */
+    protected $_searchOptions = [];
+
+    /**
      * Query constructor.
      * @param \Dilab\CakeMongo\Collection $repository
      */
@@ -380,6 +387,23 @@ class Query implements IteratorAggregate
     }
 
     /**
+     * Set or get the search options
+     *
+     * @param  null|array $options An array of additional search options
+     * @return $this|array
+     */
+    public function searchOptions(array $options = null)
+    {
+        if ($options === null) {
+            return $this->_searchOptions;
+        }
+
+        $this->_searchOptions = $options;
+
+        return $this;
+    }
+
+    /**
      * Executes the query.
      *
      * @return \Dilab\CakeMongo\ResultSet The results of the query
@@ -390,10 +414,12 @@ class Query implements IteratorAggregate
 
         $name = $this->_repository->name();
 
-        $collection = $connection->getDatabase()->selectCollection($name);
+        $internalCollection = $connection->getDatabase()->selectCollection($name);
 
         $query = $this->compileQuery();
 
-        return new ResultSet($collection->search($query, $this->_searchOptions), $this);
+        $internalResult = $internalCollection->find($query, $this->_searchOptions);
+
+        return new ResultSet($internalResult, $this);
     }
 }
