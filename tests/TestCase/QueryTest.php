@@ -2,7 +2,6 @@
 
 namespace Dilab\CakeMongo;
 
-
 use Cake\TestSuite\TestCase;
 
 /**
@@ -285,12 +284,9 @@ class QueryTest extends TestCase
      */
     public function testAll()
     {
-
         $database = $this->getMockBuilder('MongoDB\Database')
             ->disableOriginalConstructor()
             ->getMock();
-
-
 
         $connection = $this->getMockBuilder(
             'Dilab\CakeMongo\Datasource\Connection'

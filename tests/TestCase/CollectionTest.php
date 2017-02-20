@@ -14,7 +14,7 @@ class CollectionTest extends TestCase
      */
     public $collection;
 
-    public $fixtures = ['plugin.cake/elastic_search.articles'];
+    public $fixtures = ['plugin.cake/cake_mongo.articles'];
 
     public function setUp()
     {

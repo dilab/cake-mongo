@@ -93,7 +93,6 @@ class Collection implements RepositoryInterface
         return $this->_name;
     }
 
-
     /**
      * Calls a finder method directly and applies it to the passed query
      *

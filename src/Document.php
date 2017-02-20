@@ -14,4 +14,5 @@ class Document implements EntityInterface
 {
     use EntityTrait;
 
+
 }

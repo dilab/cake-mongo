@@ -8,7 +8,6 @@ use Cake\TestSuite\TestCase;
 
 class FilterBuilderTest extends TestCase
 {
-
     /**
      * Tests the eq() filter
      *
