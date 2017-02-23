@@ -3,8 +3,6 @@ namespace Dilab\CakeMongo\TestSuite;
 
 use Cake\Datasource\ConnectionInterface;
 use Cake\Datasource\FixtureInterface;
-use Elastica\Query\MatchAll;
-use Elastica\Type\Mapping as ElasticaMapping;
 
 /**
  * A Test fixture implementation for Mongo DB
@@ -71,6 +69,8 @@ class TestFixture implements FixtureInterface
      */
     public function insert(ConnectionInterface $db)
     {
+
+
         if (empty($this->records)) {
             return;
         }

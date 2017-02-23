@@ -3,13 +3,12 @@
 namespace Dilab\CakeMongo;
 
 
-use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\TestCase;
 
 
 class ResultSetTest extends TestCase
 {
-    public $fixtures = ['articles'];
+    public $fixtures = ['plugin.dilab/cake_mongo.articles'];
 
     public function setUp()
     {

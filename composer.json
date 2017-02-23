@@ -1,5 +1,5 @@
 {
-    "name": "dilab/oss-cake-mongo",
+    "name": "dilab/cake-mongo",
     "description": "A MongoDB datasource and data mapper for CakePHP 3.0",
     "type": "cakephp-plugin",
     "require": {
