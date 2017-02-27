@@ -43,4 +43,19 @@ class ConnectionTest extends TestCase
         $this->assertTrue($connection->logQueries());
     }
 
+    /**
+     * Ensure the database option works via the constructor
+     *
+     * @return void
+     */
+    public function testConstructDatabaseOption()
+    {
+        $connection = new Connection();
+        $this->assertSame('test',$connection->getDatabase()->getDatabaseName());
+
+        $opts = ['database' => 'cake-mongo'];
+        $connection = new Connection($opts);
+        $this->assertSame('cake-mongo',$connection->getDatabase()->getDatabaseName());
+    }
+
 }

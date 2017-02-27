@@ -24,8 +24,13 @@ class Connection extends Client implements ConnectionInterface
     protected $configName = '';
 
     /**
-     * Constructor. Appends the default database name to the config array, which by default
-     * is `test`
+     * @var Hold config values
+     */
+    private $_config;
+
+    /**
+     * Constructor. Appends the default database name to the config array,
+     * which by default is `test`
      *
      * @param array $config config options
      * @param callback $callback Callback function which can be used to be notified
@@ -45,13 +50,16 @@ class Connection extends Client implements ConnectionInterface
 
         $uri = sprintf('mongodb://%s:%s', $config['host'], $config['port']);
 
+        $this->setConfig($config);
         parent::__construct($uri);
     }
 
     public function getDatabase($name = null)
     {
-        $name = $name ?: 'test';
-
+//        $name = $name ?: 'test';
+        if (null == $name) {
+            $name = isset($this->_config['database']) ? $this->_config['database'] : 'test';
+        }
         return $this->selectDatabase($name);
     }
 
@@ -70,6 +78,16 @@ class Connection extends Client implements ConnectionInterface
     {
         return $this->_config;
     }
+
+    private function setConfig(array $config)
+    {
+        foreach ($config as $key => $value) {
+            $this->_config[$key] = $value;
+        }
+
+        return $this;
+    }
+
 
     /**
      * {@inheritDoc}
@@ -110,5 +128,15 @@ class Connection extends Client implements ConnectionInterface
         $this->_logger = $instance;
     }
 
+    /**
+     * Returns a SchemaCollection stub until we can add more
+     * abstract API's in Connection.
+     *
+     * @return \Dilab\CakeMongo\Datasource\SchemaCollection
+     */
+    public function schemaCollection()
+    {
+        return new SchemaCollection($this);
+    }
 
 }
