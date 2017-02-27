@@ -37,7 +37,6 @@ class ResultSetTest extends TestCase
 
         $query->expects($this->any())->method('repository')
             ->will($this->returnValue($collection));
-
         return [new ResultSet($cursor, $query), $cursor];
     }
 
