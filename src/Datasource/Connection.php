@@ -56,7 +56,6 @@ class Connection extends Client implements ConnectionInterface
 
     public function getDatabase($name = null)
     {
-//        $name = $name ?: 'test';
         if (null == $name) {
             $name = isset($this->_config['database']) ? $this->_config['database'] : 'test';
         }

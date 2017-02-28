@@ -69,8 +69,6 @@ class TestFixture implements FixtureInterface
      */
     public function insert(ConnectionInterface $db)
     {
-
-
         if (empty($this->records)) {
             return;
         }
@@ -94,17 +92,18 @@ class TestFixture implements FixtureInterface
     }
 
     /**
-     * Drops a mapping and all its related data.
+     * Drops a database and all its related data.
      *
      * @param \Cake\Datasource\ConnectionInterface $db The CakeMongo connection
      * @return void
      */
     public function drop(ConnectionInterface $db)
     {
-        $index = $db->getIndex();
-        $type = $index->getType($this->table);
-        $type->delete();
-        $index->refresh();
+        $database = $db->getDatabase();
+
+        $collection = $database->selectCollection($this->table);
+
+        $collection->drop();
     }
 
     /**
@@ -115,11 +114,11 @@ class TestFixture implements FixtureInterface
      */
     public function truncate(ConnectionInterface $db)
     {
-        $query = new MatchAll();
-        $index = $db->getIndex();
-        $type = $index->getType($this->table);
-        $type->deleteByQuery($query);
-        $index->refresh();
+        $database = $db->getDatabase();
+
+        $collection = $database->selectCollection($this->table);
+
+        $collection->drop();
     }
 
     /**
