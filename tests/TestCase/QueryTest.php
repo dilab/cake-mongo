@@ -3,6 +3,8 @@
 namespace Dilab\CakeMongo;
 
 use Cake\TestSuite\TestCase;
+use Dilab\CakeMongo\Datasource\Connection;
+use MongoDB\Driver\Cursor;
 
 /**
  * Tests the Query class
@@ -10,6 +12,8 @@ use Cake\TestSuite\TestCase;
  */
 class QueryTest extends TestCase
 {
+    public $fixtures = ['plugin.dilab/cake_mongo.articles'];
+
     /**
      * Tests query constructor
      *
@@ -310,21 +314,30 @@ class QueryTest extends TestCase
             ->method('selectCollection')
             ->will($this->returnValue($internalCollection));
 
-        $result = $this->getMockBuilder('\Traversable')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $cursor = $this->getCursor();
 
         $internalCollection->expects($this->once())
             ->method('find')
-            ->will($this->returnCallback(function ($query) use ($result) {
-                $this->assertTrue(is_array($query));
-                return $result;
+            ->will($this->returnCallback(function ($query) use ($cursor) {
+                return $cursor;
             }));
 
         $query = new Query($collection);
         $resultSet = $query->all();
         $this->assertInstanceOf('Dilab\CakeMongo\ResultSet', $resultSet);
-        $this->assertInstanceOf(\Traversable::class, $resultSet->getInnerIterator());
+        $this->assertInstanceOf(Cursor::class, $resultSet->getInnerIterator());
     }
 
+    private function getCursor()
+    {
+        $connection = new Connection();
+
+        $database = $connection->getDatabase();
+
+        $collection = $database->selectCollection('articles');
+
+        $query = (new Query(new Collection(['name' => 'articles'])))->where(['id >' => 0]);
+
+        return $collection->find($query->compileQuery());
+    }
 }
