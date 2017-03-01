@@ -6,6 +6,7 @@ use Cake\Collection\CollectionTrait;
 use Countable;
 use IteratorIterator;
 use JsonSerializable;
+use MongoDB\Driver\Cursor;
 
 /**
  * Decorates the MongoDB Cursor in order to hydrate results with the
@@ -30,12 +31,11 @@ class ResultSet extends IteratorIterator implements Countable, JsonSerializable
     protected $entityClass;
 
     /**
-     * Decorator's constructor
-     *
-     * @param \MongoDB\Driver\Cursor $cursor The cursor from MongoDB to wrap
-     * @param array $query The Filter array
+     * ResultSet constructor.
+     * @param Cursor $cursor
+     * @param Query $query
      */
-    public function __construct($cursor, $query)
+    public function __construct(Cursor $cursor, Query $query)
     {
         parent::__construct($cursor);
     }

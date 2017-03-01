@@ -54,6 +54,10 @@ class Connection extends Client implements ConnectionInterface
         parent::__construct($uri);
     }
 
+    /**
+     * @param null $name
+     * @return \MongoDB\Database
+     */
     public function getDatabase($name = null)
     {
         if (null == $name) {

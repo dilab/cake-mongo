@@ -374,6 +374,8 @@ class Query implements IteratorAggregate
 
         $this->_parts['filter'] =
             array_merge($this->_parts['filter'], (new FilterBuilder)->parse($conditions));
+
+        return $this;
     }
 
     /**
@@ -418,8 +420,8 @@ class Query implements IteratorAggregate
 
         $query = $this->compileQuery();
 
-        $internalResult = $internalCollection->find($query, $this->_searchOptions);
+        $internalCursor = $internalCollection->find($query, $this->_searchOptions);
 
-        return new ResultSet($internalResult, $this);
+        return new ResultSet($internalCursor, $this);
     }
 }

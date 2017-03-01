@@ -3,7 +3,9 @@
 namespace Dilab\CakeMongo;
 
 
+use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\TestCase;
+use Dilab\CakeMongo\Datasource\Connection;
 
 
 class ResultSetTest extends TestCase
@@ -22,21 +24,29 @@ class ResultSetTest extends TestCase
 
     public function testConstructor()
     {
-        $cursor = $this->getMockBuilder('\Traversable')
-            ->disableOriginalConstructor()
-            ->getMock();
+//        $cursor = $this->getMockBuilder('\Traversable')
+//            ->disableOriginalConstructor()
+//            ->getMock();
 
-        $collection = $this->getMockBuilder('Dilab\CakeMongo\Collection')
-            ->disableOriginalConstructor()
-            ->getMock();
+//        $collection = $this->getMockBuilder('Dilab\CakeMongo\Collection')
+//            ->disableOriginalConstructor()
+//            ->getMock();
+//
+//        $query = $this->getMockBuilder('Dilab\CakeMongo\Query')
+//            ->disableOriginalConstructor()
+//            ->setMethods(['repository'])
+//            ->getMock();
 
-        $query = $this->getMockBuilder('Dilab\CakeMongo\Query')
-            ->disableOriginalConstructor()
-            ->setMethods(['repository'])
-            ->getMock();
+        $connection = new Connection();
 
-        $query->expects($this->any())->method('repository')
-            ->will($this->returnValue($collection));
+        $database = $connection->getDatabase();
+
+        $collection = $database->selectCollection('articles');
+
+        $query = (new Query(new Collection(['name' => 'articles'])))->where(['id >' => 0]);
+
+        $cursor = $collection->find($query->compileQuery());
+
         return [new ResultSet($cursor, $query), $cursor];
     }
 

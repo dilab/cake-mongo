@@ -178,7 +178,7 @@ class QueryTest extends TestCase
     {
         $collection = new Collection();
         $query = new Query($collection);
-        $query->where([
+        $result = $query->where([
             'name.first' => 'jose',
             'age >' => 29,
             'or' => [
@@ -186,6 +186,7 @@ class QueryTest extends TestCase
                 'interests not in' => ['c#', 'java']
             ]
         ]);
+        $this->assertSame($query, $result);
 
         $compiled = $query->compileQuery();
         $filter = $compiled['filter'];
