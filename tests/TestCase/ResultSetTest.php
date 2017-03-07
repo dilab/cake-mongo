@@ -19,35 +19,22 @@ class ResultSetTest extends TestCase
 
     public function tearDown()
     {
-        parent::tearDown();
+//        parent::tearDown();
     }
 
     public function testConstructor()
     {
-//        $cursor = $this->getMockBuilder('\Traversable')
-//            ->disableOriginalConstructor()
-//            ->getMock();
-
-//        $collection = $this->getMockBuilder('Dilab\CakeMongo\Collection')
-//            ->disableOriginalConstructor()
-//            ->getMock();
-//
-//        $query = $this->getMockBuilder('Dilab\CakeMongo\Query')
-//            ->disableOriginalConstructor()
-//            ->setMethods(['repository'])
-//            ->getMock();
-
         $connection = new Connection();
 
         $database = $connection->getDatabase();
 
         $collection = $database->selectCollection('articles');
 
-        $query = (new Query(new Collection(['name' => 'articles'])))->where(['id >' => 0]);
+        $query = (new Query(new Collection(['name' => 'articles'])))->where(['title' => 'First article']);
 
-        $cursor = $collection->find($query->compileQuery());
+        $cursor = $collection->find(['title' => 'First article']);
 
-        return [new ResultSet($cursor, $query), $cursor];
+        return new ResultSet($cursor, $query);
     }
 
     /**
@@ -57,24 +44,18 @@ class ResultSetTest extends TestCase
      * @depends testConstructor
      * @return void
      */
-    public function testCurrent($resultSets)
+    public function testCurrent($resultSet)
     {
-        $this->markTestSkipped();
-//        list($resultSet, $cursor) = $resultSets;
-//        $data = ['foo' => 1, 'bar' => 2];
-//        $result = $this->getMock('Elastica\Result', ['getId', 'getData', 'getType'], [[]]);
-//        $result->method('getData')
-//            ->will($this->returnValue($data));
-//        $result->method('getId')
-//            ->will($this->returnValue(99));
-//        $result->method('getType')
-//            ->will($this->returnValue('things'));
-//        $cursor->expects($this->once())
-//            ->method('current')
-//            ->will($this->returnValue($result));
-//        $document = $resultSet->current();
-//        $this->assertInstanceOf(__NAMESPACE__ . '\MyTestDocument', $document);
-//        $this->assertSame($data + ['id' => 99], $document->toArray());
+        $document = $resultSet->current();
+        var_dump($document);
+        $this->assertInstanceOf(Document::class, $document);
+//        $this->assertSame([
+//            'id' => '1',
+//            'title' => 'First article',
+//            'user_id' => 1,
+//            'body' => 'A big box of bolts and nuts.',
+//            'created' => '2014-04-01T15:01:30',
+//        ], $document->toArray());
 //        $this->assertFalse($document->dirty());
 //        $this->assertFalse($document->isNew());
     }

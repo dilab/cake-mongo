@@ -37,7 +37,15 @@ class ResultSet extends IteratorIterator implements Countable, JsonSerializable
      */
     public function __construct(Cursor $cursor, Query $query)
     {
-        parent::__construct($cursor);
+        $this->cursor = $cursor;
+
+        $repository = $query->repository();
+
+//        $this->entityClass = $repository->
+
+        parent::__construct($this->cursor);
+
+        parent::rewind();
     }
 
     public function count()
@@ -52,13 +60,13 @@ class ResultSet extends IteratorIterator implements Countable, JsonSerializable
      */
     public function current()
     {
-
+        $result = parent::current();
+        return $result;
     }
 
     function jsonSerialize()
     {
         // TODO: Implement jsonSerialize() method.
     }
-
 
 }

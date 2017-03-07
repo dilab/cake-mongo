@@ -36,4 +36,14 @@ class CollectionTest extends TestCase
         $this->assertInstanceOf('Dilab\CakeMongo\Query', $query);
         $this->assertSame($this->collection, $query->repository());
     }
+
+    /**
+     * Test the default entityClass.
+     *
+     * @return void
+     */
+    public function testEntityClassDefault()
+    {
+        $this->assertEquals('\Dilab\CakeMongo\Document', $this->collection->entityClass());
+    }
 }

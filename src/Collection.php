@@ -33,6 +33,13 @@ class Collection implements RepositoryInterface
     protected $_name;
 
     /**
+     * The name of the class that represent a single document for this collection
+     *
+     * @var string
+     */
+    protected $_documentClass;
+
+    /**
      * Constructor
      *
      * ### Options
@@ -146,6 +153,44 @@ class Collection implements RepositoryInterface
     public function findAll(Query $query, array $options = [])
     {
         return $query;
+    }
+
+    /**
+     * Returns the class used to hydrate rows for this table or sets
+     * a new one
+     *
+     * @param string $name the name of the class to use
+     * @throws \RuntimeException when the entity class cannot be found
+     * @return string
+     */
+    public function entityClass($name = null)
+    {
+        if ($name === null && !$this->_documentClass) {
+            $default = '\Dilab\CakeMongo\Document';
+            $self = get_called_class();
+            $parts = explode('\\', $self);
+
+            if ($self === __CLASS__ || count($parts) < 3) {
+                return $this->_documentClass = $default;
+            }
+
+            $alias = Inflector::singularize(substr(array_pop($parts), 0, -4));
+            $name = implode('\\', array_slice($parts, 0, -1)) . '\Document\\' . $alias;
+            if (!class_exists($name)) {
+                return $this->_documentClass = $default;
+            }
+        }
+
+        if ($name !== null) {
+            $class = App::classname($name, 'Model/Document');
+            $this->_documentClass = $class;
+        }
+
+        if (!$this->_documentClass) {
+            throw new \RuntimeException(sprintf('Missing document class "%s"', $class));
+        }
+
+        return $this->_documentClass;
     }
 
     public function alias($alias = null)
