@@ -47,15 +47,14 @@ class ResultSetTest extends TestCase
     public function testCurrent($resultSet)
     {
         $document = $resultSet->current();
-        var_dump($document);
         $this->assertInstanceOf(Document::class, $document);
-//        $this->assertSame([
-//            'id' => '1',
-//            'title' => 'First article',
-//            'user_id' => 1,
-//            'body' => 'A big box of bolts and nuts.',
-//            'created' => '2014-04-01T15:01:30',
-//        ], $document->toArray());
+        $this->assertSame([
+            'id' => '1',
+            'title' => 'First article',
+            'user_id' => 1,
+            'body' => 'A big box of bolts and nuts.',
+            'created' => '2014-04-01T15:01:30',
+        ], $document->toArray());
 //        $this->assertFalse($document->dirty());
 //        $this->assertFalse($document->isNew());
     }

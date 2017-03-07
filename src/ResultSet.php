@@ -31,6 +31,13 @@ class ResultSet extends IteratorIterator implements Countable, JsonSerializable
     protected $entityClass;
 
     /**
+     * Name of the collection that the originating query came from.
+     *
+     * @var string
+     */
+    protected $repoName;
+
+    /**
      * ResultSet constructor.
      * @param Cursor $cursor
      * @param Query $query
@@ -41,7 +48,9 @@ class ResultSet extends IteratorIterator implements Countable, JsonSerializable
 
         $repository = $query->repository();
 
-//        $this->entityClass = $repository->
+        $this->entityClass = $repository->entityClass();
+
+        $this->repoName = $repository->name();
 
         parent::__construct($this->cursor);
 
@@ -60,8 +69,24 @@ class ResultSet extends IteratorIterator implements Countable, JsonSerializable
      */
     public function current()
     {
+        $class = $this->entityClass;
         $result = parent::current();
-        return $result;
+
+        var_dump($result);
+
+        $options = [
+            'markClean' => true,
+            'useSetters' => false,
+            'markNew' => false,
+            'source' => $this->repoName,
+            'result' => $result
+        ];
+
+        $data = (array) $result->bsonSerialize();
+        $data['id'] = $data['_id'];
+
+        $document = new $class($data, $options);
+        return $document;
     }
 
     function jsonSerialize()

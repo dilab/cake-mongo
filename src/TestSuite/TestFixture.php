@@ -3,6 +3,7 @@ namespace Dilab\CakeMongo\TestSuite;
 
 use Cake\Datasource\ConnectionInterface;
 use Cake\Datasource\FixtureInterface;
+use MongoDB\BSON\ObjectID;
 
 /**
  * A Test fixture implementation for Mongo DB
@@ -80,14 +81,16 @@ class TestFixture implements FixtureInterface
         $collection = $database->selectCollection($this->table);
 
         foreach ($this->records as $data) {
-            $id = '';
+
             if (isset($data['id'])) {
-                $id = $data['id'];
+                $id = (string)$data['id'];
+                $id = new ObjectID($id);
+                unset($data['id']);
+                $data['_id'] = $id;
             }
-            unset($data['id']);
+
             $documents[] = $data;
         }
-
         $collection->insertMany($documents);
     }
 
