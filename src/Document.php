@@ -53,7 +53,12 @@ class Document implements EntityInterface
             $this->_result = $options['result'];
         }
 
+        if ($options['markClean']) {
+            $this->clean();
+        }
+
         if (!empty($data) && $options['markClean'] && !$options['useSetters']) {
+
             $this->_properties = $data;
 
             return;
@@ -64,10 +69,6 @@ class Document implements EntityInterface
                 'setter' => $options['useSetters'],
                 'guard' => $options['guard']
             ]);
-        }
-
-        if ($options['markClean']) {
-            $this->clean();
         }
     }
 

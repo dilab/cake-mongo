@@ -48,14 +48,14 @@ class ResultSetTest extends TestCase
     {
         $document = $resultSet->current();
         $this->assertInstanceOf(Document::class, $document);
-        $this->assertSame([
-            'id' => '1',
+        $expected = [
             'title' => 'First article',
             'user_id' => 1,
             'body' => 'A big box of bolts and nuts.',
             'created' => '2014-04-01T15:01:30',
-        ], $document->toArray());
-//        $this->assertFalse($document->dirty());
-//        $this->assertFalse($document->isNew());
+        ];
+        $this->assertArraySubset($expected, $document->toArray());
+        $this->assertFalse($document->dirty());
+        $this->assertFalse($document->isNew());
     }
 }
