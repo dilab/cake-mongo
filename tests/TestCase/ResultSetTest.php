@@ -12,16 +12,6 @@ class ResultSetTest extends TestCase
 {
     public $fixtures = ['plugin.dilab/cake_mongo.articles'];
 
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
-    public function tearDown()
-    {
-//        parent::tearDown();
-    }
-
     public function testConstructor()
     {
         $connection = new Connection();
@@ -34,7 +24,7 @@ class ResultSetTest extends TestCase
 
         $cursor = $collection->find(['title' => 'First article']);
 
-        return new ResultSet($cursor, $query);
+        return [new ResultSet($cursor, $query), $cursor];
     }
 
     /**
@@ -44,18 +34,39 @@ class ResultSetTest extends TestCase
      * @depends testConstructor
      * @return void
      */
-    public function testCurrent($resultSet)
+    public function testCurrent($constructorReturn)
     {
+        list($resultSet, $cursor) = $constructorReturn;
+
         $document = $resultSet->current();
+
         $this->assertInstanceOf(Document::class, $document);
+
         $expected = [
             'title' => 'First article',
             'user_id' => 1,
             'body' => 'A big box of bolts and nuts.',
             'created' => '2014-04-01T15:01:30',
         ];
+
         $this->assertArraySubset($expected, $document->toArray());
+
         $this->assertFalse($document->dirty());
+
         $this->assertFalse($document->isNew());
+    }
+
+    /**
+     * Tests that calling count will call count the internal result set
+     * class
+     *
+     * @depends testConstructor
+     * @return void
+     */
+    public function testCount($constructorReturn)
+    {
+        list($resultSet, $cursor) = $constructorReturn;
+
+        $this->assertEquals(1, $resultSet->count());
     }
 }

@@ -57,9 +57,14 @@ class ResultSet extends IteratorIterator implements Countable, JsonSerializable
         parent::rewind();
     }
 
+    /**
+     * Returns size of current set
+     *
+     * @return int Size of set
+     */
     public function count()
     {
-        // TODO: Implement count() method.
+        return count($this->cursor);
     }
 
     /**
@@ -87,10 +92,4 @@ class ResultSet extends IteratorIterator implements Countable, JsonSerializable
         $document = new $class($data, $options);
         return $document;
     }
-
-    function jsonSerialize()
-    {
-        // TODO: Implement jsonSerialize() method.
-    }
-
 }
