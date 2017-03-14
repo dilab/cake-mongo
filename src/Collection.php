@@ -258,4 +258,13 @@ class Collection implements RepositoryInterface
         // TODO: Implement patchEntities() method.
     }
 
+    /**
+     * The default connection name to inject when creating an instance.
+     *
+     * @return string
+     */
+    public static function defaultConnectionName()
+    {
+        return 'cake_mongo';
+    }
 }

@@ -24,4 +24,4 @@ if (!getenv('db_dsn')) {
 }
 
 ConnectionManager::config('test', ['url' => getenv('db_dsn')]);
-//ConnectionManager::config('test_elastic', ['url' => getenv('db_dsn')]);
+ConnectionManager::config('test_cake_mongo', ['url' => getenv('db_dsn')]);
