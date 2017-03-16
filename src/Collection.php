@@ -3,6 +3,7 @@
 
 namespace Dilab\CakeMongo;
 
+use Cake\Core\App;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\RepositoryInterface;
 use Cake\Utility\Inflector;
@@ -77,7 +78,7 @@ class Collection implements RepositoryInterface
     }
 
     /**
-     * Returns the collection name name or sets a new one
+     * Returns the collection name or sets a new one
      *
      * @param string $name the new type name
      * @return string
@@ -165,6 +166,7 @@ class Collection implements RepositoryInterface
      */
     public function entityClass($name = null)
     {
+
         if ($name === null && !$this->_documentClass) {
             $default = '\Dilab\CakeMongo\Document';
             $self = get_called_class();
@@ -193,10 +195,22 @@ class Collection implements RepositoryInterface
         return $this->_documentClass;
     }
 
+    /**
+     * Get/set the collection/table name for this type.
+     *
+     * @param string $table The 'table' name for this type.
+     * @return string
+     */
+    public function table($table = null)
+    {
+        return $this->name($table);
+    }
+
     public function alias($alias = null)
     {
         // TODO: Implement alias() method.
     }
+
 
     public function hasField($field)
     {

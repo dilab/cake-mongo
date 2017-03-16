@@ -40,6 +40,13 @@ class Query implements IteratorAggregate
     protected $_searchOptions = [];
 
     /**
+     * Internal state to track whether or not the query has been modified.
+     *
+     * @var bool
+     */
+    protected $_dirty = false;
+
+    /**
      * Query constructor.
      * @param \Dilab\CakeMongo\Collection $repository
      */

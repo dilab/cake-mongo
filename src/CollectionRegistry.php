@@ -63,6 +63,7 @@ class CollectionRegistry
      */
     public static function get($alias, array $options = [])
     {
+
         if (isset(static::$instances[$alias])) {
             if (!empty($options) && static::$options[$alias] !== $options) {
                 throw new \RuntimeException(sprintf(
