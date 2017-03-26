@@ -29,8 +29,8 @@ class Document implements EntityInterface
     {
         if ($data instanceof BSONDocument) {
             $data = (array)$data->bsonSerialize();
-            $data['id'] = (string)$data['_id'];
-            unset($data['_id']);
+            $data['_id'] = (string)$data['_id'];
+//            unset($data['_id']);
         }
 
         $options += [
@@ -41,6 +41,7 @@ class Document implements EntityInterface
             'source' => null,
             'result' => null
         ];
+
         if (!empty($options['source'])) {
             $this->source($options['source']);
         }

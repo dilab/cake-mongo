@@ -158,7 +158,7 @@ class CollectionRegistryTest extends TestCase
      */
     public function testGetPlugin()
     {
-        $this->markTestIncomplete();
+        $this->markTestIncomplete('Do this after collection class is done');
         Plugin::load('TestPlugin');
         $table = CollectionRegistry::get('TestPlugin.Comments');
         $this->assertInstanceOf('TestPlugin\Model\Collection\CommentsCollection', $table);

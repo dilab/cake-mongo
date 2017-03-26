@@ -7,6 +7,7 @@ use Cake\Core\App;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\RepositoryInterface;
 use Cake\Utility\Inflector;
+use MongoDB\BSON\ObjectID;
 
 /**
  * Base class for mapping collections in a database.
@@ -217,9 +218,50 @@ class Collection implements RepositoryInterface
         // TODO: Implement hasField() method.
     }
 
+    /**
+     * @{inheritdoc}
+     *
+     * Any key present in the options array will be translated as a GET argument
+     * when getting the document by its id. This is often useful whe you need to
+     * specify the parent or routing.
+     *
+     * This method will not trigger the Model.beforeFind callback as it does not use
+     * queries for the search, but a faster key lookup to the search index.
+     *
+     * @param string $primaryKey The document's primary key
+     * @param array $options An array of options
+     * @throws \Elastica\Exception\NotFoundException if no document exist with such id
+     * @return \Cake\ElasticSearch\Document A new Elasticsearch document entity
+     */
     public function get($primaryKey, $options = [])
     {
-        // TODO: Implement get() method.
+        $internalCollection = $this->connection()->getDatabase()->selectCollection($this->name());
+        $result = $internalCollection->findOne(['_id' => new ObjectID($primaryKey)], $options);
+        $class = $this->entityClass();
+
+        $options = [
+            'markNew' => false,
+            'markClean' => true,
+            'useSetters' => false,
+            'source' => $this->name(),
+        ];
+//        $data = $result->getData();
+//        $data['id'] = $result->getId();
+//        foreach ($this->embedded() as $embed) {
+//            $prop = $embed->property();
+//            if (isset($data[$prop])) {
+//                $data[$prop] = $embed->hydrate($data[$prop], $options);
+//            }
+//        }
+
+        $data = (array)$result->bsonSerialize();
+        $data['_id'] = (string)$data['_id'];
+
+//        $data['id'] = (string)$data['_id'];
+//        unset($data['_id']);
+
+
+        return new $class($data, $options);
     }
 
     public function query()

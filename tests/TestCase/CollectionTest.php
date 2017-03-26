@@ -85,4 +85,42 @@ class CollectionTest extends TestCase
             $collection->entityClass('TestUser')
         );
     }
+
+    /**
+     * Tests that using a simple string for entityClass will try to
+     * load the class from the Plugin namespace when using plugin notation
+     *
+     * @return void
+     */
+    public function testTableClassInPlugin()
+    {
+        $class = $this->getMockClass('\Dilab\Mongo\Document');
+        class_alias($class, 'MyPlugin\Model\Document\SuperUser');
+
+        $collection = new Collection();
+        $this->assertEquals(
+            'MyPlugin\Model\Document\SuperUser',
+            $collection->entityClass('MyPlugin.SuperUser')
+        );
+    }
+
+    /**
+     * Tests the get method
+     *
+     * @return void
+     */
+    public function testGet()
+    {
+        $result = $this->collection->get('507f191e810c19729de860ea');
+        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result);
+        $this->assertEquals([
+            'title' => 'First article',
+            'user_id' => 1,
+            'body' => 'A big box of bolts and nuts.',
+            'created' => '2014-04-01T15:01:30',
+            '_id' => '507f191e810c19729de860ea'
+        ], $result->toArray());
+        $this->assertFalse($result->dirty());
+        $this->assertFalse($result->isNew());
+    }
 }

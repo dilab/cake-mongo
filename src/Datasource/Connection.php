@@ -91,7 +91,6 @@ class Connection extends Client implements ConnectionInterface
         return $this;
     }
 
-
     /**
      * {@inheritDoc}
      */
