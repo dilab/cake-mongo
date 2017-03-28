@@ -123,4 +123,21 @@ class CollectionTest extends TestCase
         $this->assertFalse($result->dirty());
         $this->assertFalse($result->isNew());
     }
+
+    /**
+     * Test that newEntity is wired up.
+     *
+     * @return void
+     */
+    public function testNewEntity()
+    {
+        $this->markTestIncomplete('Work on this after Marshaller');
+        $data = [
+            'title' => 'A newer title'
+        ];
+        $result = $this->collection->newEntity($data);
+        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result);
+        $this->assertSame($data, $result->toArray());
+        $this->assertEquals('articles', $result->source());
+    }
 }

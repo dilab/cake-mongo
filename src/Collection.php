@@ -294,9 +294,33 @@ class Collection implements RepositoryInterface
         // TODO: Implement delete() method.
     }
 
+    /**
+     * Create a new entity
+     *
+     * This is most useful when hydrating request data back into entities.
+     * For example, in your controller code:
+     *
+     * ```
+     * $article = $this->Articles->newEntity($this->request->data());
+     * ```
+     *
+     * The hydrated entity will correctly do an insert/update based
+     * on the primary key data existing in the database when the entity
+     * is saved. Until the entity is saved, it will be a detached record.
+     *
+     * @param array|null $data The data to build an entity with.
+     * @param array $options A list of options for the object hydration.
+     * @return \Cake\Datasource\EntityInterface
+     */
     public function newEntity($data = null, array $options = [])
     {
-        // TODO: Implement newEntity() method.
+        if ($data === null) {
+            $class = $this->entityClass();
+
+            return new $class([], ['source' => $this->name()]);
+        }
+
+        return $this->marshaller()->one($data, $options);
     }
 
     public function newEntities(array $data, array $options = [])
@@ -322,5 +346,15 @@ class Collection implements RepositoryInterface
     public static function defaultConnectionName()
     {
         return 'cake_mongo';
+    }
+
+    /**
+     * Get a marshaller for this Collection instance.
+     *
+     * @return \Dilab\CakeMongo\Marshaller
+     */
+    public function marshaller()
+    {
+        return new Marshaller($this);
     }
 }

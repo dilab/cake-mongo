@@ -89,6 +89,7 @@ class TestFixture implements FixtureInterface
 
             $documents[] = $data;
         }
+
         $collection->insertMany($documents);
     }
 
