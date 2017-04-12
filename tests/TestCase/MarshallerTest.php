@@ -4,26 +4,57 @@
 namespace Dilab\CakeMongo;
 
 
+use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\TestCase;
-use Cake\ORM\Marshaller;
 
 class MarshallerTest extends TestCase
 {
     /**
-     * @var Marshaller
+     * Fixtures for this test.
+     *
+     * @var array
      */
-    private $Marshaller;
+    public $fixtures = ['plugin.dilab/cake_mongo.articles'];
 
+    /**
+     * @var Collection
+     */
+    private $collection;
+
+    /**
+     * Setup method.
+     *
+     * @return void
+     */
     public function setUp()
     {
         parent::setUp();
-        $this->Marshaller = makeMarshaller();
+        $this->collection = new Collection([
+            'name' => 'articles',
+            'connection' => ConnectionManager::get('test')
+        ]);
     }
 
-    public function tearDown()
+    /**
+     * test marshalling a simple object.
+     *
+     * @return void
+     */
+    public function testOneSimple()
     {
-        parent::tearDown();
-        unset($this->Marshaller);
+        $this->markTestIncomplete();
+        $data = [
+            'title' => 'Testing',
+            'body' => 'Elastic text',
+            'user_id' => 1,
+        ];
+        $marshaller = new Marshaller($this->collection);
+        $result = $marshaller->one($data);
+
+        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result);
+        $this->assertSame($data['title'], $result->title);
+        $this->assertSame($data['body'], $result->body);
+        $this->assertSame($data['user_id'], $result->user_id);
     }
 
 }

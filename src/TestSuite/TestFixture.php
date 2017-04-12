@@ -84,7 +84,6 @@ class TestFixture implements FixtureInterface
 
             if (isset($data['_id'])) {
                 $data['_id'] = new ObjectID($data['_id']);
-//                unset($data['id']);
             }
 
             $documents[] = $data;
@@ -120,7 +119,7 @@ class TestFixture implements FixtureInterface
 
         $collection = $database->selectCollection($this->table);
 
-        $collection->drop();
+        $collection->deleteMany([]);
     }
 
     /**
@@ -152,7 +151,7 @@ class TestFixture implements FixtureInterface
 
     /**
      * No-op method needed because of the Fixture interface.
-     * Elasticsearch does not deal with foreign key constraints.
+     * MongoDB does not deal with foreign key constraints.
      *
      * @param \Cake\Datasource\ConnectionInterface $db The CakeMongo connection
      *  connection

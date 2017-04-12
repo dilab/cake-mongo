@@ -77,6 +77,35 @@ class Connection extends Client implements ConnectionInterface
     /**
      * {@inheritDoc}
      */
+    public function enabled()
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function beginTransaction()
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function disableForeignKeys()
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function enableForeignKeys()
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function config()
     {
         return $this->_config;
@@ -140,5 +169,7 @@ class Connection extends Client implements ConnectionInterface
     {
         return new SchemaCollection($this);
     }
+
+
 
 }
