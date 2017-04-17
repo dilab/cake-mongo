@@ -7,6 +7,7 @@ use Cake\Core\App;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\RepositoryInterface;
 use Cake\Utility\Inflector;
+use Cake\Validation\ValidatorAwareTrait;
 use MongoDB\BSON\ObjectID;
 
 /**
@@ -19,6 +20,21 @@ use MongoDB\BSON\ObjectID;
  */
 class Collection implements RepositoryInterface
 {
+    use ValidatorAwareTrait;
+
+    /**
+     * Default validator name.
+     *
+     * @var string
+     */
+    const DEFAULT_VALIDATOR = 'default';
+
+    /**
+     * Validator provider name.
+     *
+     * @var string
+     */
+    const VALIDATOR_PROVIDER_NAME = 'collection';
 
     /**
      * Connection instance

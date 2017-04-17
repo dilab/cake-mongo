@@ -25,6 +25,35 @@ class Marshaller
     }
 
     /**
+     * Returns the validation errors for a data set based on the passed options
+     *
+     * @param array $data The data to validate.
+     * @param array $options The options passed to this marshaller.
+     * @param bool $isNew Whether it is a new entity or one to be updated.
+     * @return array The list of validation errors.
+     * @throws \RuntimeException If no validator can be created.
+     */
+    protected function _validate($data, $options, $isNew)
+    {
+        if (!$options['validate']) {
+            return [];
+        }
+        if ($options['validate'] === true) {
+            $options['validate'] = $this->collection->validator('default');
+        }
+        if (is_string($options['validate'])) {
+            $options['validate'] = $this->collection->validator($options['validate']);
+        }
+        if (!is_object($options['validate'])) {
+            throw new \RuntimeException(
+                sprintf('validate must be a boolean, a string or an object. Got %s.', gettype($options['validate']))
+            );
+        }
+
+        return $options['validate']->errors($data, $isNew);
+    }
+    
+    /**
      * Hydrate a single document.
      *
      * ### Options:
@@ -58,14 +87,14 @@ class Marshaller
             unset($data[$badKey]);
         }
 
-        foreach ($this->type->embedded() as $embed) {
-            $property = $embed->property();
-            if (in_array($embed->alias(), $options['associated']) &&
-                isset($data[$property])
-            ) {
-                $data[$property] = $this->newNested($embed, $data[$property]);
-            }
-        }
+//        foreach ($this->collection->embedded() as $embed) {
+//            $property = $embed->property();
+//            if (in_array($embed->alias(), $options['associated']) &&
+//                isset($data[$property])
+//            ) {
+//                $data[$property] = $this->newNested($embed, $data[$property]);
+//            }
+//        }
 
         if (!isset($options['fieldList'])) {
             $entity->set($data);
@@ -80,5 +109,22 @@ class Marshaller
         }
 
         return $entity;
+    }
+
+    /**
+     * Returns data and options prepared to validate and marshall.
+     *
+     * @param array $data The data to prepare.
+     * @param array $options The options passed to this marshaller.
+     * @return array An array containing prepared data and options.
+     */
+    protected function _prepareDataAndOptions($data, $options)
+    {
+        $options += ['validate' => true];
+        $data = new \ArrayObject($data);
+        $options = new \ArrayObject($options);
+//        $this->collection->dispatchEvent('Model.beforeMarshal', compact('data', 'options'));
+
+        return [(array)$data, (array)$options];
     }
 }
