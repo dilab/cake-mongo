@@ -139,4 +139,31 @@ class MarshallerTest extends TestCase
         $this->assertSame($data['body'], $result->body);
         $this->assertNull($result->user_id);
     }
+
+    /**
+     * test beforeMarshal event
+     *
+     * @return void
+     */
+    public function testOneBeforeMarshalEvent()
+    {
+        $data = [
+            'title' => 'Testing',
+            'body' => 'Elastic text',
+            'user_id' => 1,
+        ];
+        $called = 0;
+        $this->collection->eventManager()->on(
+            'Model.beforeMarshal',
+            function ($event, $data, $options) use (&$called) {
+                $called++;
+                $this->assertInstanceOf('ArrayObject', $data);
+                $this->assertInstanceOf('ArrayObject', $options);
+            }
+        );
+        $marshaller = new Marshaller($this->collection);
+        $marshaller->one($data);
+
+        $this->assertEquals(1, $called, 'method should be called');
+    }
 }

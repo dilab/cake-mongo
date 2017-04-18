@@ -6,6 +6,7 @@ namespace Dilab\CakeMongo;
 use Cake\Core\App;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\RepositoryInterface;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Utility\Inflector;
 use Cake\Validation\ValidatorAwareTrait;
 use MongoDB\BSON\ObjectID;
@@ -20,6 +21,7 @@ use MongoDB\BSON\ObjectID;
  */
 class Collection implements RepositoryInterface
 {
+    use EventDispatcherTrait;
     use ValidatorAwareTrait;
 
     /**

@@ -123,7 +123,7 @@ class Marshaller
         $options += ['validate' => true];
         $data = new \ArrayObject($data);
         $options = new \ArrayObject($options);
-//        $this->collection->dispatchEvent('Model.beforeMarshal', compact('data', 'options'));
+        $this->collection->dispatchEvent('Model.beforeMarshal', compact('data', 'options'));
 
         return [(array)$data, (array)$options];
     }
