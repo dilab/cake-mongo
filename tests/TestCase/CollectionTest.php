@@ -118,7 +118,7 @@ class CollectionTest extends TestCase
             'user_id' => 1,
             'body' => 'A big box of bolts and nuts.',
             'created' => '2014-04-01T15:01:30',
-            '_id' => '507f191e810c19729de860ea'
+            'id' => '507f191e810c19729de860ea'
         ], $result->toArray());
         $this->assertFalse($result->dirty());
         $this->assertFalse($result->isNew());

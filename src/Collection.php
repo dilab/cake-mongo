@@ -249,7 +249,7 @@ class Collection implements RepositoryInterface
      * @param string $primaryKey The document's primary key
      * @param array $options An array of options
      * @throws \Elastica\Exception\NotFoundException if no document exist with such id
-     * @return \Cake\ElasticSearch\Document A new Elasticsearch document entity
+     * @return \Dilab\CakeMongo\Document A new CakeMongo document entity
      */
     public function get($primaryKey, $options = [])
     {
@@ -274,9 +274,8 @@ class Collection implements RepositoryInterface
 
         $data = (array)$result->bsonSerialize();
         $data['_id'] = (string)$data['_id'];
-
-//        $data['id'] = (string)$data['_id'];
-//        unset($data['_id']);
+        $data['id'] = (string)$data['_id'];
+        unset($data['_id']);
 
 
         return new $class($data, $options);
