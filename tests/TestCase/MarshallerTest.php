@@ -610,7 +610,7 @@ class MarshallerTest extends TestCase
 
         $data = [
             [
-                'id' => '507f191e810c19729de860ea',
+                '_id' => '507f191e810c19729de860ea',
                 'title' => 'New first',
             ],
             [

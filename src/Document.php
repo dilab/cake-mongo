@@ -14,6 +14,8 @@ use MongoDB\Model\BSONDocument;
  */
 class Document implements EntityInterface
 {
+    protected $id = '_id';
+
     use EntityTrait;
 
     /**

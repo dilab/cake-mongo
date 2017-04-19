@@ -9,6 +9,7 @@ use Cake\Datasource\RepositoryInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Utility\Inflector;
 use Cake\Validation\ValidatorAwareTrait;
+use Dilab\CakeMongo\Exception\NotFoundException;
 use MongoDB\BSON\ObjectID;
 
 /**
@@ -37,6 +38,13 @@ class Collection implements RepositoryInterface
      * @var string
      */
     const VALIDATOR_PROVIDER_NAME = 'collection';
+
+    /**
+     * The name of the field that represents the primary key in the collection
+     *
+     * @var string|array
+     */
+    protected $_primaryKey;
 
     /**
      * Connection instance
@@ -230,7 +238,6 @@ class Collection implements RepositoryInterface
         // TODO: Implement alias() method.
     }
 
-
     public function hasField($field)
     {
         // TODO: Implement hasField() method.
@@ -248,13 +255,17 @@ class Collection implements RepositoryInterface
      *
      * @param string $primaryKey The document's primary key
      * @param array $options An array of options
-     * @throws \Elastica\Exception\NotFoundException if no document exist with such id
+     * @throws \Dilab\CakeMongo\Exception\NotFoundException if no document exist with such id
      * @return \Dilab\CakeMongo\Document A new CakeMongo document entity
      */
     public function get($primaryKey, $options = [])
     {
         $internalCollection = $this->connection()->getDatabase()->selectCollection($this->name());
-        $result = $internalCollection->findOne(['_id' => new ObjectID($primaryKey)], $options);
+        $result = $internalCollection->findOne([$this->getPrimaryKey() => new ObjectID($primaryKey)], $options);
+        if (empty($result)) {
+            throw new NotFoundException('MongoDB Record not found');
+        }
+
         $class = $this->entityClass();
 
         $options = [
@@ -273,9 +284,9 @@ class Collection implements RepositoryInterface
 //        }
 
         $data = (array)$result->bsonSerialize();
-        $data['_id'] = (string)$data['_id'];
-        $data['id'] = (string)$data['_id'];
-        unset($data['_id']);
+        $data[$this->getPrimaryKey()] = (string)$data[$this->getPrimaryKey()];
+//        $data['id'] = (string)$data['_id'];
+//        unset($data['_id']);
 
 
         return new $class($data, $options);
@@ -374,4 +385,26 @@ class Collection implements RepositoryInterface
     {
         return new Marshaller($this);
     }
+
+    /**
+     * @return array|string
+     */
+    public function getPrimaryKey()
+    {
+        if (null === $this->_primaryKey) {
+            return '_id';
+        }
+
+        return $this->_primaryKey;
+    }
+
+    /**
+     * @param array|string $primaryKey
+     */
+    public function setPrimaryKey($primaryKey)
+    {
+        $this->_primaryKey = $primaryKey;
+    }
+
+
 }
