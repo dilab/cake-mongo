@@ -261,7 +261,7 @@ class Collection implements RepositoryInterface
     public function get($primaryKey, $options = [])
     {
         $internalCollection = $this->connection()->getDatabase()->selectCollection($this->name());
-        $result = $internalCollection->findOne([$this->getPrimaryKey() => new ObjectID($primaryKey)], $options);
+        $result = $internalCollection->findOne(['_id' => new ObjectID($primaryKey)], $options);
         if (empty($result)) {
             throw new NotFoundException('MongoDB Record not found');
         }
@@ -284,9 +284,9 @@ class Collection implements RepositoryInterface
 //        }
 
         $data = (array)$result->bsonSerialize();
-        $data[$this->getPrimaryKey()] = (string)$data[$this->getPrimaryKey()];
 //        $data['id'] = (string)$data['_id'];
-//        unset($data['_id']);
+        $data['id'] = (string)$data['_id'];
+        unset($data['_id']);
 
 
         return new $class($data, $options);
@@ -385,26 +385,5 @@ class Collection implements RepositoryInterface
     {
         return new Marshaller($this);
     }
-
-    /**
-     * @return array|string
-     */
-    public function getPrimaryKey()
-    {
-        if (null === $this->_primaryKey) {
-            return '_id';
-        }
-
-        return $this->_primaryKey;
-    }
-
-    /**
-     * @param array|string $primaryKey
-     */
-    public function setPrimaryKey($primaryKey)
-    {
-        $this->_primaryKey = $primaryKey;
-    }
-
 
 }

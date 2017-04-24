@@ -82,8 +82,9 @@ class TestFixture implements FixtureInterface
 
         foreach ($this->records as $data) {
 
-            if (isset($data['_id'])) {
-                $data['_id'] = new ObjectID($data['_id']);
+            if (isset($data['id'])) {
+                $data['_id'] = new ObjectID($data['id']);
+                unset($data['id']);
             }
 
             $documents[] = $data;

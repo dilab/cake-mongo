@@ -31,7 +31,7 @@ class Document implements EntityInterface
     {
         if ($data instanceof BSONDocument) {
             $data = (array)$data->bsonSerialize();
-            $data['_id'] = (string)$data['_id'];
+            $data[$this->id] = (string)$data[$this->id];
 //            unset($data['_id']);
         }
 
