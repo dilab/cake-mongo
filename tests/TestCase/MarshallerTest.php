@@ -631,4 +631,60 @@ class MarshallerTest extends TestCase
         $this->assertTrue($result[1]->dirty('title'));
     }
 
+    /**
+     * Test that unknown entities are excluded from the results.
+     *
+     * @return void
+     */
+    public function testMergeManyDropsUnknownEntities()
+    {
+        $doc = $this->collection->get('507f191e810c19729de860ea');
+        $entities = [$doc];
+
+        $data = [
+            [
+                'id' => 2,
+                'title' => 'New first',
+            ],
+            [
+                'title' => 'New third',
+            ],
+        ];
+        $marshaller = new Marshaller($this->collection);
+        $result = $marshaller->mergeMany($entities, $data);
+
+        $this->assertCount(2, $result);
+        $this->assertEquals($data[0], $result[0]->toArray());
+        $this->assertTrue($result[0]->isNew());
+        $this->assertTrue($result[0]->dirty());
+        $this->assertTrue($result[0]->dirty('title'));
+
+        $this->assertEquals($data[1], $result[1]->toArray());
+        $this->assertTrue($result[1]->isNew());
+        $this->assertTrue($result[1]->dirty());
+        $this->assertTrue($result[1]->dirty('title'));
+    }
+
+    /**
+     * Ensure that only entities are updated.
+     *
+     * @return void
+     */
+    public function testMergeManyBadEntityData()
+    {
+        $doc = $this->collection->get('507f191e810c19729de860ea');
+        $entities = ['string', ['herp' => 'derp']];
+
+        $data = [
+            [
+                'title' => 'New first',
+            ],
+        ];
+        $marshaller = new Marshaller($this->collection);
+        $result = $marshaller->mergeMany($entities, $data);
+
+        $this->assertCount(1, $result);
+        $this->assertEquals($data[0], $result[0]->toArray());
+    }
+
 }
