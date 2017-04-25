@@ -194,7 +194,7 @@ class MarshallerTest extends TestCase
      */
     public function testOneEmbeddedOne()
     {
-        $this->markTestIncomplete();
+        $this->markTestSkipped('Embed Not Implemented Yet');
         $data = [
             'title' => 'Testing',
             'body' => 'MongoDB text',
@@ -230,7 +230,7 @@ class MarshallerTest extends TestCase
      */
     public function testOneEmbeddedMany()
     {
-        $this->markTestIncomplete();
+        $this->markTestSkipped('Embed Not Implemented Yet');
         $data = [
             'title' => 'Testing',
             'body' => 'MongoDB text',
@@ -410,7 +410,7 @@ class MarshallerTest extends TestCase
      */
     public function testMergeEmbeddedOneExisting()
     {
-        $this->markTestIncomplete();
+        $this->markTestSkipped('Embed Not Implemented Yet');
         $this->type->embedOne('User');
         $data = [
             'title' => 'Testing',
@@ -443,7 +443,7 @@ class MarshallerTest extends TestCase
      */
     public function testMergeEmbeddedOneMissing()
     {
-        $this->markTestIncomplete();
+        $this->markTestSkipped('Embed Not Implemented Yet');
 
         $this->type->embedOne('User');
         $data = [
@@ -475,7 +475,7 @@ class MarshallerTest extends TestCase
      */
     public function testMergeEmbeddedMany()
     {
-        $this->markTestIncomplete();
+        $this->markTestSkipped('Embed Not Implemented Yet');
 
         $data = [
             'title' => 'Testing',
@@ -514,7 +514,8 @@ class MarshallerTest extends TestCase
      */
     public function testMergeEmbeddedManySomeMissing()
     {
-        $this->markTestIncomplete();
+        $this->markTestSkipped('Embed Not Implemented Yet');
+
         $data = [
             'title' => 'Testing',
             'body' => 'MongoDB text',

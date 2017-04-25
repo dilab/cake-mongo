@@ -131,7 +131,6 @@ class CollectionTest extends TestCase
      */
     public function testNewEntity()
     {
-        $this->markTestIncomplete('Work on this after Marshaller');
         $data = [
             'title' => 'A newer title'
         ];

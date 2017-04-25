@@ -55,7 +55,6 @@ class QueryTest extends TestCase
      */
     public function testLimit()
     {
-        $this->markTestIncomplete();
         $collection = new Collection();
         $query = new Query($collection);
         $this->assertSame($query, $query->limit(10));
@@ -96,7 +95,6 @@ class QueryTest extends TestCase
      */
     public function testOrder()
     {
-        $this->markTestIncomplete();
         $collection = new Collection();
         $query = new Query($collection);
         $this->assertSame($query, $query->order('price'));
@@ -128,8 +126,6 @@ class QueryTest extends TestCase
      */
     public function testClause()
     {
-        $this->markTestIncomplete();
-
         $collection = new Collection();
         $query = new Query($collection);
 
@@ -158,8 +154,6 @@ class QueryTest extends TestCase
      */
     public function testPage()
     {
-        $this->markTestIncomplete();
-
         $collection = new Collection();
         $query = new Query($collection);
         $this->assertSame($query, $query->page(10));
@@ -186,8 +180,6 @@ class QueryTest extends TestCase
      */
     public function testWhere()
     {
-        $this->markTestIncomplete();
-
         $collection = new Collection();
         $query = new Query($collection);
         $result = $query->where([
@@ -246,8 +238,6 @@ class QueryTest extends TestCase
      */
     public function testApplyOptions()
     {
-        $this->markTestIncomplete();
-
         $collection = new Collection();
         $query = new Query($collection);
 
@@ -286,8 +276,6 @@ class QueryTest extends TestCase
      */
     public function testChainedFinders()
     {
-        $this->markTestIncomplete();
-
         $collection = new Collection();
         $query = new Query($collection);
         $this->assertInstanceOf(Query::class, $query->find()->find());
@@ -301,8 +289,6 @@ class QueryTest extends TestCase
      */
     public function testAll()
     {
-        $this->markTestIncomplete();
-
         $database = $this->getMockBuilder('MongoDB\Database')
             ->disableOriginalConstructor()
             ->getMock();
@@ -344,8 +330,6 @@ class QueryTest extends TestCase
 
     private function getCursor()
     {
-        $this->markTestIncomplete();
-
         $connection = new Connection();
 
         $database = $connection->getDatabase();
