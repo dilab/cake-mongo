@@ -25,7 +25,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Dilab\\CakeMongo\\Test\\": "tests"
+            "Dilab\\CakeMongo\\Test\\": "tests",
+            "TestPlugin\\": "tests/testapp/Plugin/TestPlugin/src",
+            "TestPluginTwo\\": "tests/testapp/Plugin/TestPluginTwo/src"
         }
     }
 }
