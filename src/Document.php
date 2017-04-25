@@ -19,6 +19,14 @@ class Document implements EntityInterface
     use EntityTrait;
 
     /**
+     * Holds an instance of a BSONDocument object that's passed into the constructor
+     * from a search query.
+     *
+     * @var MongoDB\Model\BSONDocument
+     */
+    protected $_result;
+
+    /**
      * Takes either an array or a Result object form a search and constructs
      * a document representing an entity in a elastic search type,
      *
@@ -31,8 +39,10 @@ class Document implements EntityInterface
     {
         if ($data instanceof BSONDocument) {
             $data = (array)$data->bsonSerialize();
-            $data[$this->id] = (string)$data[$this->id];
-//            unset($data['_id']);
+            if (isset($data['_id'])) {
+                $data['id'] = (string)$data['_id'];
+                unset($data['_id']);
+            }
         }
 
         $options += [
@@ -74,5 +84,4 @@ class Document implements EntityInterface
             ]);
         }
     }
-
 }
