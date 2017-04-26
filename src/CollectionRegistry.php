@@ -104,4 +104,27 @@ class CollectionRegistry
         return static::$instances[$alias];
     }
 
+    /**
+     * Set an instance.
+     *
+     * @param string $alias The alias to set.
+     * @param \Dilab\CakeMongo\Collection $object The type to set.
+     * @return \Dilab\CakeMongo\Collection
+     */
+    public static function set($alias, Collection $object)
+    {
+        return static::$instances[$alias] = $object;
+    }
+
+    /**
+     * Removes an instance from the registry.
+     *
+     * @param string $alias The alias to remove.
+     * @return void
+     */
+    public static function remove($alias)
+    {
+        unset(static::$instances[$alias]);
+    }
+
 }
