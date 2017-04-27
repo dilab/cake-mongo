@@ -1,10 +1,8 @@
 <?php
-
-
-namespace Dilab\CakeMongo;
-
+namespace Dilab\CakeMongo\Test\TestCase;
 
 use Cake\TestSuite\TestCase;
+use Dilab\CakeMongo\FilterBuilder;
 
 class FilterBuilderTest extends TestCase
 {

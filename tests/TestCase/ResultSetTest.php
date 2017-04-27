@@ -1,11 +1,13 @@
 <?php
-
-namespace Dilab\CakeMongo;
-
+namespace Dilab\CakeMongo\Test\TestCase;
 
 use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\TestCase;
+use Dilab\CakeMongo\Collection;
 use Dilab\CakeMongo\Datasource\Connection;
+use Dilab\CakeMongo\Document;
+use Dilab\CakeMongo\Query;
+use Dilab\CakeMongo\ResultSet;
 
 
 class ResultSetTest extends TestCase

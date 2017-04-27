@@ -1,9 +1,11 @@
 <?php
-
-namespace Dilab\CakeMongo;
+namespace Dilab\CakeMongo\Test\TestCase;
 
 use Cake\TestSuite\TestCase;
+use Dilab\CakeMongo\Collection;
 use Dilab\CakeMongo\Datasource\Connection;
+use Dilab\CakeMongo\FilterBuilder;
+use Dilab\CakeMongo\Query;
 use MongoDB\Driver\Cursor;
 
 /**

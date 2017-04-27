@@ -1,11 +1,11 @@
 <?php
-
-
-namespace Dilab\CakeMongo;
-
+namespace Dilab\CakeMongo\Test\TestCase;
 
 use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\TestCase;
+use Dilab\CakeMongo\Collection;
+use Dilab\CakeMongo\Document;
+use Dilab\CakeMongo\Marshaller;
 
 /**
  * Test entity for mass assignment.

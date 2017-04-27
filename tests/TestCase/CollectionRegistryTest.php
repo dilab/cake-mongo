@@ -1,12 +1,11 @@
 <?php
-
-
-namespace Dilab\CakeMongo;
-
+namespace Dilab\CakeMongo\Test\TestCase;
 
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\TestSuite\TestCase;
+use Dilab\CakeMongo\Collection;
+use Dilab\CakeMongo\CollectionRegistry;
 
 /**
  * Used to test correct class is instantiated when using CollectionRegistry::get();

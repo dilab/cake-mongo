@@ -1,20 +1,9 @@
 <?php
-/**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @since         0.0.1
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
-namespace Cake\ElasticSearch\Test\Fixture;
 
-use Cake\ElasticSearch\TestSuite\TestFixture;
+namespace Dilab\CakeMongo\Test\Fixture;
+
+use Dilab\CakeMongo\TestSuite\TestFixture;
+
 
 /**
  * Profile & Address test fixture.
@@ -54,7 +43,7 @@ class ProfilesFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => '1',
+            'id' => '507f191e810c19729de860ea',
             'username' => 'mark',
             'address' => [
                 'street' => '123 street',
@@ -64,7 +53,7 @@ class ProfilesFixture extends TestFixture
             ]
         ],
         [
-            'id' => '2',
+            'id' => '4e49fd8269fd873c0a000000',
             'username' => 'jose',
             'address' => [
                 'street' => '456 street',
@@ -74,7 +63,7 @@ class ProfilesFixture extends TestFixture
             ]
         ],
         [
-            'id' => '3',
+            'id' => '4cdfb11e1f3c000000007822',
             'username' => 'sara',
             'address' => [
                 [

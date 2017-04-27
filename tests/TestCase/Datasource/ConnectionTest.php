@@ -1,8 +1,7 @@
 <?php
 
+namespace Dilab\CakeMongo\Test\TestCase\Datasource;
 
-use Cake\Datasource\ConnectionManager;
-use Cake\Log\Log;
 use Cake\TestSuite\TestCase;
 use Dilab\CakeMongo\Datasource\Connection;
 

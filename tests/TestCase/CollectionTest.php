@@ -1,11 +1,9 @@
 <?php
-
-
-namespace Dilab\CakeMongo;
-
+namespace Dilab\CakeMongo\Test\TestCase;
 
 use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\TestCase;
+use Dilab\CakeMongo\Collection;
 
 class CollectionTest extends TestCase
 {
