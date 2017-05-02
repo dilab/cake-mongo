@@ -2,9 +2,8 @@
 
 namespace Dilab\CakeMongo\Test\TestCase\Datasource;
 
-use Cake\ElasticSearch\Datasource\MappingSchema;
 use Cake\TestSuite\TestCase;
-use Cake\Validation\Validator;
+use Dilab\CakeMongo\Datasource\MappingSchema;
 
 /**
  * Test case for the MappingSchema
@@ -18,8 +17,6 @@ class MappingSchemaTest extends TestCase
      */
     public function testName()
     {
-        $this->markTestIncomplete('TODO');
-
         $mapping = new MappingSchema('articles', []);
         $this->assertEquals('articles', $mapping->name());
     }
@@ -31,8 +28,6 @@ class MappingSchemaTest extends TestCase
      */
     public function testFields()
     {
-        $this->markTestIncomplete('TODO');
-
         $data = [
             'user_id' => [
                 'type' => 'integer'
@@ -56,8 +51,6 @@ class MappingSchemaTest extends TestCase
      */
     public function testField()
     {
-        $this->markTestIncomplete('TODO');
-
         $data = [
             'user_id' => [
                 'type' => 'integer'
@@ -83,7 +76,6 @@ class MappingSchemaTest extends TestCase
      */
     public function testFieldNested()
     {
-        $this->markTestIncomplete('TODO');
         $data = [
             'user_id' => [
                 'type' => 'integer'
@@ -107,8 +99,6 @@ class MappingSchemaTest extends TestCase
      */
     public function testFieldType()
     {
-        $this->markTestIncomplete('TODO');
-
         $data = [
             'user_id' => [
                 'type' => 'integer'
