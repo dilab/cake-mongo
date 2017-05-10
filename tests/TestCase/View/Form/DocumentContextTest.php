@@ -4,11 +4,11 @@ namespace Dilab\CakeMongo\Test\TestCase\View\Form;
 
 use ArrayIterator;
 use ArrayObject;
-use Cake\Collection\Collection;
 use Cake\Datasource\ConnectionManager;
 use Cake\Network\Request;
 use Cake\TestSuite\TestCase;
 use Cake\Validation\Validator;
+use Dilab\CakeMongo\Collection;
 use Dilab\CakeMongo\CollectionRegistry;
 use Dilab\CakeMongo\Document;
 use Dilab\CakeMongo\View\Form\DocumentContext;
@@ -65,7 +65,6 @@ class DocumentContextTest extends TestCase
      */
     public function testPrimaryKey()
     {
-        $this->markTestIncomplete('Do this after MappingSchema');
         $row = new Article();
         $context = new DocumentContext($this->request, [
             'entity' => $row,
@@ -80,7 +79,6 @@ class DocumentContextTest extends TestCase
      */
     public function testIsPrimaryKey()
     {
-        $this->markTestIncomplete('TODO');
         $row = new Article();
         $context = new DocumentContext($this->request, [
             'entity' => $row,
@@ -102,7 +100,6 @@ class DocumentContextTest extends TestCase
      */
     public function testIsCreateSingle()
     {
-        $this->markTestIncomplete('TODO');
         $row = new Article();
         $context = new DocumentContext($this->request, [
             'entity' => $row,
@@ -141,7 +138,7 @@ class DocumentContextTest extends TestCase
             'array' => [[$one, $two]],
             'basic iterator' => [new ArrayObject([$one, $two])],
             'array iterator' => [new ArrayIterator([$one, $two])],
-            'collection' => [new Collection([$one, $two])],
+            'collection' => [new \Cake\Collection\Collection([$one, $two])],
         ];
     }
 
@@ -153,7 +150,6 @@ class DocumentContextTest extends TestCase
      */
     public function testIsCreateCollection($collection)
     {
-        $this->markTestIncomplete('TODO');
         $context = new DocumentContext($this->request, [
             'entity' => $collection,
         ]);
@@ -167,7 +163,6 @@ class DocumentContextTest extends TestCase
      */
     public function testValBasic()
     {
-        $this->markTestIncomplete('TODO');
         $row = new Article([
             'title' => 'Test entity',
             'body' => 'Something new'
@@ -193,8 +188,6 @@ class DocumentContextTest extends TestCase
      */
     public function testValEmbeddedDocs()
     {
-        $this->markTestIncomplete('TODO');
-
         $row = new Article([
             'title' => 'Test entity',
             'body' => 'Something new',
@@ -229,11 +222,9 @@ class DocumentContextTest extends TestCase
      */
     public function testValOnCollections($collection)
     {
-        $this->markTestIncomplete('TODO');
-
         $context = new DocumentContext($this->request, [
             'entity' => $collection,
-            'type' => 'articles',
+            'collection' => 'articles',
         ]);
 
         $result = $context->val('0.title');
@@ -259,14 +250,12 @@ class DocumentContextTest extends TestCase
      */
     public function testIsRequrired()
     {
-        $this->markTestIncomplete('TODO');
-
         $articles = $this->setupType();
         $entity = new Document(['title' => 'test']);
 
         $context = new DocumentContext($this->request, [
             'entity' => $entity,
-            'type' => $articles,
+            'collection' => $articles,
         ]);
         $this->assertTrue($context->isRequired('title'));
         $this->assertFalse($context->isRequired('body'));
@@ -287,7 +276,7 @@ class DocumentContextTest extends TestCase
 
         $context = new DocumentContext($this->request, [
             'entity' => $entity,
-            'type' => $articles,
+            'collection' => $articles,
             'validator' => 'alternate'
         ]);
         $this->assertFalse($context->isRequired('title'));
@@ -307,7 +296,7 @@ class DocumentContextTest extends TestCase
 
         $context = new DocumentContext($this->request, [
             'entity' => $collection,
-            'tyupe' => 'articles',
+            'collection' => 'articles',
         ]);
 
         $this->assertTrue($context->hasError('0.title'));
@@ -329,8 +318,6 @@ class DocumentContextTest extends TestCase
      */
     public function testError()
     {
-        $this->markTestIncomplete('TODO');
-
         $articles = $this->setupType();
 
         $row = new Article([
@@ -364,8 +351,6 @@ class DocumentContextTest extends TestCase
      */
     public function testErrorAssociatedHasMany()
     {
-        $this->markTestIncomplete('TODO');
-
         $articles = $this->setupType();
 
         $row = new Article([
@@ -401,12 +386,10 @@ class DocumentContextTest extends TestCase
      */
     public function testFieldNames()
     {
-        $this->markTestIncomplete('TODO');
-
         $articles = $this->setupType();
         $context = new DocumentContext($this->request, [
             'entity' => new Document([]),
-            'type' => 'articles',
+            'collection' => 'articles',
         ]);
         $result = $context->fieldNames();
         $this->assertContains('title', $result);
@@ -421,8 +404,6 @@ class DocumentContextTest extends TestCase
      */
     public function testType()
     {
-        $this->markTestIncomplete('TODO');
-
         $articles = $this->setupType();
 
         $row = new Article([
@@ -447,9 +428,9 @@ class DocumentContextTest extends TestCase
      */
     public function testTypeNestedFields()
     {
-        $this->markTestIncomplete('TODO');
+        $this->markTestIncomplete('Implement Collection::schema');
 
-        $profiles = new Type([
+        $profiles = new Collection([
             'connection' => ConnectionManager::get('test'),
             'name' => 'profiles',
         ]);
@@ -457,7 +438,7 @@ class DocumentContextTest extends TestCase
         $row = new Document([]);
         $context = new DocumentContext($this->request, [
             'entity' => $row,
-            'type' => $profiles,
+            'collection' => $profiles,
         ]);
 
         $this->assertEquals('string', $context->type('username'));
@@ -468,13 +449,13 @@ class DocumentContextTest extends TestCase
     /**
      * Setup an articles type for testing against.
      *
-     * @return \Cake\ElasticSearch\Type
+     * @return \Dilab\CakeMongo\Collection
      */
     protected function setupType()
     {
         $this->markTestIncomplete('TODO');
 
-        $articles = TypeRegistry::get('Articles');
+        $articles = CollectionRegistry::get('Articles');
         $articles->embedOne('User');
         $articles->embedMany('Comments');
 

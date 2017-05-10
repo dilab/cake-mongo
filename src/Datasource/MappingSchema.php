@@ -29,10 +29,10 @@ class MappingSchema
     public function __construct($name, array $data)
     {
         $this->name = $name;
-        if (isset($data[$name]['properties'])) {
-            $data = $data[$name]['properties'];
-        }
-        $this->data = $data;
+//        if (isset($data[$name]['properties'])) {
+//            $data = $data[$name]['properties'];
+//        }
+//        $this->data = $data;
     }
 
     /**
@@ -55,23 +55,24 @@ class MappingSchema
      */
     public function field($name)
     {
-        if (strpos($name, '.') === false) {
-            if (isset($this->data[$name])) {
-                return $this->data[$name];
-            }
-
-            return null;
-        }
-        $parts = explode('.', $name);
-        $pointer = $this->data;
-        foreach ($parts as $part) {
-            if (isset($pointer[$part]['type']) && $pointer[$part]['type'] !== 'nested') {
-                return $pointer[$part];
-            }
-            if (isset($pointer[$part]['properties'])) {
-                $pointer = $pointer[$part]['properties'];
-            }
-        }
+        return 'flexible';
+//        if (strpos($name, '.') === false) {
+//            if (isset($this->data[$name])) {
+//                return $this->data[$name];
+//            }
+//
+//            return null;
+//        }
+//        $parts = explode('.', $name);
+//        $pointer = $this->data;
+//        foreach ($parts as $part) {
+//            if (isset($pointer[$part]['type']) && $pointer[$part]['type'] !== 'nested') {
+//                return $pointer[$part];
+//            }
+//            if (isset($pointer[$part]['properties'])) {
+//                $pointer = $pointer[$part]['properties'];
+//            }
+//        }
     }
 
     /**
@@ -84,12 +85,14 @@ class MappingSchema
      */
     public function fieldType($name)
     {
-        $field = $this->field($name);
-        if (!$field) {
-            return null;
-        }
+        return 'flexible';
 
-        return $field['type'];
+//        $field = $this->field($name);
+//        if (!$field) {
+//            return null;
+//        }
+//
+//        return $field['type'];
     }
 
     /**

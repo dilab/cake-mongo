@@ -5,6 +5,7 @@ use Cake\Collection\Collection;
 use Cake\Network\Request;
 use Cake\Utility\Inflector;
 use Cake\View\Form\ContextInterface;
+use Dilab\CakeMongo\CollectionRegistry;
 use Dilab\CakeMongo\Document;
 use RuntimeException;
 use Traversable;
@@ -54,7 +55,7 @@ class DocumentContext implements ContextInterface
         $this->_request = $request;
         $context += [
             'entity' => null,
-            'type' => null,
+            'collection' => null,
             'validator' => 'default',
         ];
         $this->_context = $context;
@@ -65,7 +66,7 @@ class DocumentContext implements ContextInterface
      * Prepare some additional data from the context.
      *
      * If the table option was provided to the constructor and it
-     * was a string, TypeRegistry will be used to get the correct table instance.
+     * was a string, CollectionRegistry will be used to get the correct table instance.
      *
      * If an object is provided as the type option, it will be used as is.
      *
@@ -78,27 +79,27 @@ class DocumentContext implements ContextInterface
      */
     protected function _prepare()
     {
-        $type = $this->_context['type'];
+        $collection = $this->_context['collection'];
         $entity = $this->_context['entity'];
-        if (empty($type)) {
+        if (empty($collection)) {
             if (is_array($entity) || $entity instanceof Traversable) {
                 $entity = (new Collection($entity))->first();
             }
             $isDocument = $entity instanceof Document;
 
             if ($isDocument) {
-                $type = $entity->source();
+                $collection = $entity->source();
             }
-            if (!$type && $isDocument && get_class($entity) !== 'Dilab\CakeMongo\Document') {
+            if (!$collection && $isDocument && get_class($entity) !== 'Dilab\CakeMongo\Document') {
                 list(, $entityClass) = namespaceSplit(get_class($entity));
-                $type = Inflector::pluralize($entityClass);
+                $collection = Inflector::pluralize($entityClass);
             }
         }
-        if (is_string($type)) {
-            $type = TypeRegistry::get($type);
+        if (is_string($collection)) {
+            $collection = CollectionRegistry::get($collection);
         }
 
-        if (!is_object($type)) {
+        if (!is_object($collection)) {
             throw new RuntimeException(
                 'Unable to find type class for current entity'
             );
@@ -107,8 +108,8 @@ class DocumentContext implements ContextInterface
             is_array($entity) ||
             $entity instanceof Traversable
         );
-        $this->_rootName = $type->name();
-        $this->_context['type'] = $type;
+        $this->_rootName = $collection->name();
+        $this->_context['collection'] = $collection;
     }
 
     /**
@@ -268,13 +269,13 @@ class DocumentContext implements ContextInterface
     }
 
     /**
-     * Get the validator for the current type.
+     * Get the validator for the current collection.
      *
      * @return \Cake\Validation\Validator The validator for the type.
      */
     protected function getValidator()
     {
-        return $this->_context['type']->validator($this->_context['validator']);
+        return $this->_context['collection']->validator($this->_context['validator']);
     }
 
     /**
@@ -282,7 +283,7 @@ class DocumentContext implements ContextInterface
      */
     public function fieldNames()
     {
-        $schema = $this->_context['type']->schema();
+        $schema = $this->_context['collection']->schema();
 
         return $schema->fields();
     }
@@ -292,7 +293,7 @@ class DocumentContext implements ContextInterface
      */
     public function type($field)
     {
-        $schema = $this->_context['type']->schema();
+        $schema = $this->_context['collection']->schema();
 
         return $schema->fieldType($field);
     }

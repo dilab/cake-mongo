@@ -9,6 +9,7 @@ use Cake\Datasource\RepositoryInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Utility\Inflector;
 use Cake\Validation\ValidatorAwareTrait;
+use Dilab\CakeMongo\Datasource\MappingSchema;
 use Dilab\CakeMongo\Exception\NotFoundException;
 use MongoDB\BSON\ObjectID;
 
@@ -66,6 +67,13 @@ class Collection implements RepositoryInterface
      * @var string
      */
     protected $_documentClass;
+
+    /**
+     * The mapping schema for this type.
+     *
+     * @var MappingSchema
+     */
+    protected $schema;
 
     /**
      * Constructor
@@ -236,6 +244,30 @@ class Collection implements RepositoryInterface
     public function alias($alias = null)
     {
         // TODO: Implement alias() method.
+    }
+
+    /**
+     * Get the mapping data from the index type.
+     *
+     * This will fetch the schema from ElasticSearch the first
+     * time this method is called.
+     *
+     *
+     * @return array
+     */
+    public function schema()
+    {
+        if ($this->schema !== null) {
+            return $this->schema;
+        }
+
+        $name = $this->name();
+
+//        $internalCollection = $this->connection()->getDatabase()->selectCollection($name);
+
+        $this->schema = new MappingSchema($name, []);
+
+        return $this->schema;
     }
 
     public function hasField($field)
