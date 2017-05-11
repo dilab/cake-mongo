@@ -284,7 +284,6 @@ class Collection implements RepositoryInterface
 //        }
 
         $data = (array)$result->bsonSerialize();
-//        $data['id'] = (string)$data['_id'];
         $data['id'] = (string)$data['_id'];
         unset($data['_id']);
 
