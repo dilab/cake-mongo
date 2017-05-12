@@ -1,4 +1,9 @@
-# cake-mongo
+# Cake Mongo
+
+## Notice
+This package is still work-in-progress.
+Please do not use it for production.
+Watch or Star this repository to get notified its status.
 
 ## Installation
 
