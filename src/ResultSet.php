@@ -64,7 +64,7 @@ class ResultSet extends IteratorIterator implements Countable, JsonSerializable
      */
     public function count()
     {
-        return count($this->cursor);
+        return iterator_count($this);
     }
 
     /**

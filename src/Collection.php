@@ -6,12 +6,17 @@ namespace Dilab\CakeMongo;
 use Cake\Core\App;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\RepositoryInterface;
+use Cake\Datasource\RulesAwareTrait;
+use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
+use Cake\Event\EventListenerInterface;
+use Cake\ORM\RulesChecker;
 use Cake\Utility\Inflector;
 use Cake\Validation\ValidatorAwareTrait;
 use Dilab\CakeMongo\Datasource\MappingSchema;
 use Dilab\CakeMongo\Exception\NotFoundException;
 use MongoDB\BSON\ObjectID;
+use MongoDB\Driver\Exception\InvalidArgumentException;
 
 /**
  * Base class for mapping collections in a database.
@@ -21,10 +26,11 @@ use MongoDB\BSON\ObjectID;
  * have multiple collections, this ODM maps
  * each collection in a database to a class.
  */
-class Collection implements RepositoryInterface
+class Collection implements RepositoryInterface, EventListenerInterface, EventDispatcherInterface
 {
     use EventDispatcherTrait;
     use ValidatorAwareTrait;
+    use RulesAwareTrait;
 
     /**
      * Default validator name.
@@ -201,7 +207,6 @@ class Collection implements RepositoryInterface
      */
     public function entityClass($name = null)
     {
-
         if ($name === null && !$this->_documentClass) {
             $default = '\Dilab\CakeMongo\Document';
             $self = get_called_class();
@@ -241,9 +246,17 @@ class Collection implements RepositoryInterface
         return $this->name($table);
     }
 
+    /**
+     * Get the alias for this Type.
+     *
+     * This method is just an alias of name().
+     *
+     * @param string $alias The new type name
+     * @return string
+     */
     public function alias($alias = null)
     {
-        // TODO: Implement alias() method.
+        return $this->name($alias);
     }
 
     /**
@@ -270,9 +283,18 @@ class Collection implements RepositoryInterface
         return $this->schema;
     }
 
+    /**
+     * Check whether or not a field exists in the mapping.
+     *
+     * @param string $field The field to check.
+     * @return bool
+     */
     public function hasField($field)
     {
-        // TODO: Implement hasField() method.
+        return true;
+//        $mapping = $this->schema();
+
+//        return $mapping->field($field) !== null;
     }
 
     /**
@@ -334,24 +356,174 @@ class Collection implements RepositoryInterface
         // TODO: Implement updateAll() method.
     }
 
+    /**
+     * Delete all matching records.
+     *
+     * Deletes all records matching the provided conditions.
+     *
+     * This method will *not* trigger beforeDelete/afterDelete events. If you
+     * need those first load a collection of records and delete them.
+     *
+     * @param array $conditions An array of conditions, similar to those used with find()
+     * @return bool Success Returns true if one or more rows are effected.
+     * @see RepositoryInterface::delete()
+     */
     public function deleteAll($conditions)
     {
-        // TODO: Implement deleteAll() method.
+        $query = $this->query();
+        $query->where($conditions);
+
+        $internalCollection = $this->connection()->getDatabase()->selectCollection($this->name());
+
+        $deleteResult = $internalCollection->deleteMany($query->compileQuery()['filter']);
+
+//        $type = $this->connection()->getIndex()->getType($this->name());
+//        $response = $type->deleteByQuery($query->compileQuery());
+
+        return $deleteResult->isAcknowledged();
     }
 
+    /**
+     * Returns true if there is any record in this repository matching the specified
+     * conditions.
+     *
+     * @param array $conditions list of conditions to pass to the query
+     * @return bool
+     */
     public function exists($conditions)
     {
-        // TODO: Implement exists() method.
+        try {
+
+            $query = $this->query();
+
+            if (count($conditions) && isset($conditions['id'])) {
+                $query->where(function ($builder) use ($conditions) {
+                    return $builder->eq('_id', new ObjectID($conditions['id']));
+                });
+            } else {
+                $query->where($conditions);
+            }
+
+            $internalCollection = $this->connection()->getDatabase()->selectCollection($this->name());
+
+            return $internalCollection->count($query->compileQuery()['filter']) > 0;
+
+        } catch (InvalidArgumentException $e) {
+
+            return false;
+
+        }
+
     }
 
+    /**
+     * Persists an entity based on the fields that are marked as dirty and
+     * returns the same entity after a successful save or false in case
+     * of any error.
+     *
+     * Triggers the `Model.beforeSave` and `Model.afterSave` events.
+     *
+     * ## Options
+     *
+     * - `checkRules` Defaults to true. Check deletion rules before deleting the record.
+     *
+     * @param \Cake\Datasource\EntityInterface $entity The entity to be saved
+     * @param array $options An array of options to be used for the event
+     * @return \Cake\Datasource\EntityInterface|bool
+     */
     public function save(EntityInterface $entity, $options = [])
     {
-        // TODO: Implement save() method.
+        $options += ['checkRules' => true];
+        $options = new \ArrayObject($options);
+        $event = $this->dispatchEvent('Model.beforeSave', [
+            'entity' => $entity,
+            'options' => $options
+        ]);
+        if ($event->isStopped()) {
+            return $event->result;
+        }
+        if ($entity->errors()) {
+            return false;
+        }
+
+        $mode = $entity->isNew() ? RulesChecker::CREATE : RulesChecker::UPDATE;
+        if ($options['checkRules'] && !$this->checkRules($entity, $mode, $options)) {
+            return false;
+        }
+
+        $collection = $this->connection()->getDatabase()->selectCollection($this->name());
+        $id = $entity->id ?: null;
+        $data = $entity->toArray();
+        unset($data['id'], $data['_id']);
+
+        if (null == $id) {
+
+            $insertOneResult = $collection->insertOne($data);
+
+            $entity->id = (string)$insertOneResult->getInsertedId();
+
+        } else {
+
+            $collection->updateOne(
+                ['_id' => new ObjectID($id)],
+                ['$set' => $data]
+            );
+
+        }
+
+        $entity->isNew(false);
+        $entity->setSource($this->name());
+        $entity->clean();
+
+        $this->dispatchEvent('Model.afterSave', [
+            'entity' => $entity,
+            'options' => $options
+        ]);
+
+        return $entity;
     }
 
+    /**
+     * Delete a single entity.
+     *
+     * Deletes an entity and possibly related associations from the database
+     * based on the 'dependent' option used when defining the association.
+     *
+     * Triggers the `Model.beforeDelete` and `Model.afterDelete` events.
+     *
+     * @param \Cake\Datasource\EntityInterface $entity The entity to remove.
+     * @param array $options The options for the delete.
+     * @return bool success
+     */
     public function delete(EntityInterface $entity, $options = [])
     {
-        // TODO: Implement delete() method.
+        if (!$entity->has('id')) {
+            $msg = 'Deleting requires an "id" value.';
+            throw new \InvalidArgumentException($msg);
+        }
+        $options += ['checkRules' => true];
+        $options = new \ArrayObject($options);
+        $event = $this->dispatchEvent('Model.beforeDelete', [
+            'entity' => $entity,
+            'options' => $options
+        ]);
+        if ($event->isStopped()) {
+            return $event->result;
+        }
+        if (!$this->checkRules($entity, RulesChecker::DELETE, $options)) {
+            return false;
+        }
+
+        $data = $entity->toArray();
+        $collection = $this->connection()->getDatabase()->selectCollection($this->name());
+        $deleteResult = $collection->deleteOne(['_id' => new ObjectID($data['id'])]);
+
+        $this->dispatchEvent('Model.afterDelete', [
+            'entity' => $entity,
+            'options' => $options
+        ]);
+
+        return (1 == $deleteResult->getDeletedCount());
     }
 
     /**
@@ -383,9 +555,25 @@ class Collection implements RepositoryInterface
         return $this->marshaller()->one($data, $options);
     }
 
+    /**
+     * Create a list of entities + associated entities from an array.
+     *
+     * This is most useful when hydrating request data back into entities.
+     * For example, in your controller code:
+     *
+     * ```
+     * $articles = $this->Articles->newEntities($this->request->data());
+     * ```
+     *
+     * The hydrated entities can then be iterated and saved.
+     *
+     * @param array $data The data to build an entity with.
+     * @param array $options A list of options for the objects hydration.
+     * @return array An array of hydrated records.
+     */
     public function newEntities(array $data, array $options = [])
     {
-        // TODO: Implement newEntities() method.
+        return $this->marshaller()->many($data, $options);
     }
 
     public function patchEntity(EntityInterface $entity, array $data, array $options = [])
@@ -396,6 +584,52 @@ class Collection implements RepositoryInterface
     public function patchEntities($entities, array $data, array $options = [])
     {
         // TODO: Implement patchEntities() method.
+    }
+
+    /**
+     * Get the callbacks this Collection is interested in.
+     *
+     * By implementing the conventional methods a Type class is assumed
+     * to be interested in the related event.
+     *
+     * Override this method if you need to add non-conventional event listeners.
+     * Or if you want you table to listen to non-standard events.
+     *
+     * The conventional method map is:
+     *
+     * - Model.beforeMarshal => beforeMarshal
+     * - Model.beforeFind => beforeFind
+     * - Model.beforeSave => beforeSave
+     * - Model.afterSave => afterSave
+     * - Model.beforeDelete => beforeDelete
+     * - Model.afterDelete => afterDelete
+     * - Model.beforeRules => beforeRules
+     * - Model.afterRules => afterRules
+     *
+     * @return array
+     */
+    public function implementedEvents()
+    {
+        $eventMap = [
+            'Model.beforeMarshal' => 'beforeMarshal',
+            'Model.beforeFind' => 'beforeFind',
+            'Model.beforeSave' => 'beforeSave',
+            'Model.afterSave' => 'afterSave',
+            'Model.beforeDelete' => 'beforeDelete',
+            'Model.afterDelete' => 'afterDelete',
+            'Model.beforeRules' => 'beforeRules',
+            'Model.afterRules' => 'afterRules',
+        ];
+        $events = [];
+
+        foreach ($eventMap as $event => $method) {
+            if (!method_exists($this, $method)) {
+                continue;
+            }
+            $events[$event] = $method;
+        }
+
+        return $events;
     }
 
     /**
