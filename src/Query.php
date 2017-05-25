@@ -320,10 +320,6 @@ class Query implements IteratorAggregate
 
         if ($this->_parts['filter']) {
 
-//            $this->_mongoQuery['filter'] = array_map(function (AbstractFilter $filter) {
-//                return $filter->toArray();
-//            }, $this->_parts['filter']);
-
             $this->_mongoQuery['filter'] = array_reduce($this->_parts['filter'], function ($carry, AbstractFilter $filter) {
                 $filterArray = $filter->toArray();
                 $carry = array_merge($carry, $filterArray);

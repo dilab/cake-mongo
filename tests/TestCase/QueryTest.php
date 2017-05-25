@@ -1,4 +1,5 @@
 <?php
+
 namespace Dilab\CakeMongo\Test\TestCase;
 
 use Cake\TestSuite\TestCase;
@@ -196,18 +197,16 @@ class QueryTest extends TestCase
 
         $compiled = $query->compileQuery();
         $filter = $compiled['filter'];
+        $expected = [
+            'name.first' => 'jose',
+            'age' => ['$gt' => 29],
+            '$or' => [
+                ['tags' => ['$in' => ['cake', 'php']]],
+                ['interests' => ['$nin' => ['c#', 'java']]]
+            ]
+        ];
 
-        $expected = ['name.first' => 'jose'];
-        $this->assertEquals($expected, $filter[0]);
-
-        $expected = ['age' => ['$gt' => 29]];
-        $this->assertEquals($expected, $filter[1]);
-
-        $expected = ['tags' => ['$in' => ['cake', 'php']]];
-        $this->assertEquals($expected, $filter[2]['$or'][0]);
-
-        $expected = ['interests' => ['$nin' => ['c#', 'java']]];
-        $this->assertEquals($expected, $filter[2]['$or'][1]);
+        $this->assertEquals($expected, $filter);
 
         $query->where(function (FilterBuilder $builder) {
             return $builder->and(
@@ -218,19 +217,17 @@ class QueryTest extends TestCase
 
         $compiled = $query->compileQuery();
         $filter = $compiled['filter'];
-        $expected = [
-            '$and' => [
-                ['another.thing' => 'value'],
-                ['stuff' => ['$exists' => true]],
-            ]
+        $expected['$and'] = [
+            ['another.thing' => 'value'],
+            ['stuff' => ['$exists' => true]],
         ];
-        $this->assertEquals($expected, $filter[3]);
+        $this->assertEquals($expected, $filter);
 
         $query->where(['name.first' => 'xu'], true);
         $compiled = $query->compileQuery();
         $filter = $compiled['filter'];
         $expected = ['name.first' => 'xu'];
-        $this->assertEquals($expected, $filter[0]);
+        $this->assertEquals($expected, $filter);
     }
 
     /**
@@ -256,10 +253,8 @@ class QueryTest extends TestCase
             'projection' => ['id' => 1, 'name' => 1],
             'limit' => 10,
             'filter' => [
-                [
-                    'created' => [
-                        '$gte' => '2013-01-01'
-                    ]
+                'created' => [
+                    '$gte' => '2013-01-01'
                 ]
             ],
             'sort' => [
