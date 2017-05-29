@@ -1,6 +1,4 @@
 <?php
-
-
 namespace Dilab\CakeMongo\Datasource;
 
 
