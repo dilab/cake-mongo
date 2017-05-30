@@ -575,14 +575,53 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
         return $this->marshaller()->many($data, $options);
     }
 
+    /**
+     * Merges the passed `$data` into `$entity` respecting the accessible
+     * fields configured on the entity. Returns the same entity after being
+     * altered.
+     *
+     * This is most useful when editing an existing entity using request data:
+     *
+     * ```
+     * $article = $this->Articles->patchEntity($article, $this->request->data());
+     * ```
+     *
+     * @param \Cake\Datasource\EntityInterface $entity the entity that will get the
+     * data merged in
+     * @param array $data key value list of fields to be merged into the entity
+     * @param array $options A list of options for the object hydration.
+     * @return \Cake\Datasource\EntityInterface
+     */
     public function patchEntity(EntityInterface $entity, array $data, array $options = [])
     {
-        // TODO: Implement patchEntity() method.
+        $marshaller = $this->marshaller();
+
+        return $marshaller->merge($entity, $data, $options);
     }
 
+    /**
+     * Merges each of the elements passed in `$data` into the entities
+     * found in `$entities` respecting the accessible fields configured on the entities.
+     * Merging is done by matching the primary key in each of the elements in `$data`
+     * and `$entities`.
+     *
+     * This is most useful when editing a list of existing entities using request data:
+     *
+     * ```
+     * $article = $this->Articles->patchEntities($articles, $this->request->data());
+     * ```
+     *
+     * @param array|\Traversable $entities the entities that will get the
+     * data merged in
+     * @param array $data list of arrays to be merged into the entities
+     * @param array $options A list of options for the objects hydration.
+     * @return array
+     */
     public function patchEntities($entities, array $data, array $options = [])
     {
-        // TODO: Implement patchEntities() method.
+        $marshaller = $this->marshaller();
+
+        return $marshaller->mergeMany($entities, $data, $options);
     }
 
     /**

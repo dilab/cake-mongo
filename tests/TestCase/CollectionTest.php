@@ -140,7 +140,6 @@ class CollectionTest extends TestCase
         $this->assertEquals('articles', $result->source());
     }
 
-
     /**
      * Test that newEntities is wired up.
      *
@@ -580,7 +579,7 @@ class CollectionTest extends TestCase
     }
 
     /**
-     * Test that Type implements the EventListenerInterface and some events.
+     * Test that Collection implements the EventListenerInterface and some events.
      *
      * @return void
      */
@@ -602,5 +601,35 @@ class CollectionTest extends TestCase
             'Model.afterDelete' => 'afterDelete',
         ];
         $this->assertEquals($expected, $result, 'Events do not match.');
+    }
+
+    /**
+     * Test that Collection patchEntity Method
+     *
+     * @return void
+     */
+    public function testPatchEntity()
+    {
+        $result = $this->collection->get('507f191e810c19729de860ea');
+        $data = [
+            'title' => 'A newer title'
+        ];
+        $result = $this->collection->patchEntity($result, $data);
+        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result);
+        $this->assertSame('A newer title', $result->toArray()['title']);
+    }
+
+    /**
+     * Test that Collection patchEntities Method
+     *
+     * @return void
+     */
+    public function testPatchEntities()
+    {
+        $result = [$this->collection->get('507f191e810c19729de860ea')];
+        $data = [['title' => 'A newer title']];
+        $result = $this->collection->patchEntities($result, $data);
+        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result[0]);
+        $this->assertSame('A newer title', $result[0]->toArray()['title']);
     }
 }
