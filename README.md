@@ -1,17 +1,39 @@
-# Cake Mongo
+# CakeMongo - MongoDB Plugin for CakePHP 3 
+The plugin provides an ORM-like abstraction on top of MongoDB.
 
-## Notice
-This package is still work-in-progress.
+## Installing CakeMongo via composer
 
-Please do not use it for production.
+`composer require dilab/cake-mongo:dev-master`
 
-**Watch** or **Star** this repository to get notified its status.
+## Connecting the Plugin to your Application
 
-## Installation
+Append `Plugin::load('Dilab/CakeMongo');` to `config/bootstrap.php`
 
-+ Run `composer require dilab/cake-mongo`
-+ Append `Plugin::load('Dilab/CakeMongo');` to `config/bootstrap.php`
+## Defining a connection
+
+In your `config/app.php` file, add:
+
+```
+'Datasources' => [
+    //other datasources
+    'cake_mongo' => [
+        'className' => 'Dilab\CakeMongo\Datasource\Connection',
+        'driver' => 'Dilab\CakeMongo\Datasource\Connection',
+    ]
+]
+```
+
+
+## Getting a Collection object
+
+Collection objects are the equivalent of ORM\Table instances in MongoDB. You can use the CollectionRegistry factory to get instances, much like TableRegistry:
+
+```
+use Dilab\CakeMongo\CollectionRegistry;
+
+$artciles = CollectionRegistry::get('Articles');
+```
 
 ## RoadMap
-+ [x] CakePHP ORM Actions (Find/Save/Delete) 
++ [x] CakePHP ORM Functions 
 + [ ] Embed Document Support
