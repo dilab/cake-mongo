@@ -1,4 +1,7 @@
 # CakeMongo - MongoDB Plugin for CakePHP 3 
+
+[![License](https://poser.pugx.org/cakephp/elastic-search/license.svg)](https://packagist.org/packages/cakephp/elastic-search)
+
 The plugin provides an ORM-like abstraction on top of MongoDB.
 
 ## Installing CakeMongo via composer
