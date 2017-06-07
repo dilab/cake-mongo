@@ -1,10 +1,8 @@
-.. CakeMongo documentation master file, created by
-   sphinx-quickstart on Tue Jun  6 21:37:59 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to CakeMongo's documentation!
 =====================================
+
+Another simple header
+=====================
 
 .. toctree::
    :maxdepth: 2
