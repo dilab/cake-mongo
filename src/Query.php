@@ -322,7 +322,7 @@ class Query implements IteratorAggregate
 
             $this->_mongoQuery = array_reduce($this->_parts['filter'], function ($carry, AbstractFilter $filter) {
                 $filterArray = $filter->toArray();
-                $carry = array_merge($carry, $filterArray);
+                $carry = array_merge_recursive($carry, $filterArray);
                 return $carry;
             }, []);
 
