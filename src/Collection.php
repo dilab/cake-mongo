@@ -141,6 +141,29 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
 
         return $this->_name;
     }
+    
+    /**
+	 * Sets the type name / alias.
+	 *
+	 * @param string $alias Table alias
+	 * @return $this
+	 */
+	public function setAlias($alias)
+	{
+		$this->name($alias);
+
+		return $this;
+	}
+
+	/**
+	 * Returns the type name / alias.
+	 *
+	 * @return string
+	 */
+	public function getAlias()
+	{
+		return $this->name();
+	}
 
     /**
      * Calls a finder method directly and applies it to the passed query

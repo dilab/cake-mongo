@@ -275,7 +275,7 @@ class Query implements IteratorAggregate
         return $this;
     }
 
-    /**
+     /**
      * Compile the MongoDB query.
      *
      * @return string The MongoDB query.
@@ -283,21 +283,21 @@ class Query implements IteratorAggregate
     public function compileQuery()
     {
         if ($this->_parts['fields']) {
-            $this->_mongoQuery['projection'] =
+            $this->_searchOptions['projection'] =
                 array_combine($this->_parts['fields'], array_fill(0, count($this->_parts['fields']), 1));
         }
 
         if ($this->_parts['limit']) {
-            $this->_mongoQuery['limit'] = $this->_parts['limit'];
+            $this->_searchOptions['limit'] = $this->_parts['limit'];
         }
 
         if ($this->_parts['offset']) {
-            $this->_mongoQuery['skip'] = $this->_parts['offset'];
+            $this->_searchOptions['skip'] = $this->_parts['offset'];
         }
 
         if ($this->_parts['order']) {
 
-            $this->_mongoQuery['sort'] = collection($this->_parts['order'])->map(function ($item) {
+            $this->_searchOptions['sort'] = collection($this->_parts['order'])->map(function ($item) {
 
                 $key = key($item);
 
@@ -320,9 +320,9 @@ class Query implements IteratorAggregate
 
         if ($this->_parts['filter']) {
 
-            $this->_mongoQuery['filter'] = array_reduce($this->_parts['filter'], function ($carry, AbstractFilter $filter) {
+            $this->_mongoQuery = array_reduce($this->_parts['filter'], function ($carry, AbstractFilter $filter) {
                 $filterArray = $filter->toArray();
-                $carry = array_merge($carry, $filterArray);
+                $carry = array_merge_recursive($carry, $filterArray);
                 return $carry;
             }, []);
 
