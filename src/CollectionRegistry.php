@@ -76,12 +76,15 @@ class CollectionRegistry
 
         static::$options[$alias] = $options;
         list(, $classAlias) = pluginSplit($alias);
+        $parts = explode('/', $classAlias);
+        $classAlias = array_pop($parts);
+        $type = 'Model/Collection' . (count($parts) ? '/' . implode('/', $parts) : '');
         $options = $options + ['name' => Inflector::underscore($classAlias)];
 
         if (empty($options['className'])) {
-            $options['className'] = Inflector::camelize($alias);
+            $options['className'] = Inflector::camelize($classAlias);
         }
-        $className = App::className($options['className'], 'Model/Collection', 'Collection');
+        $className = App::className($options['className'], $type, 'Collection');
 
         if ($className) {
             $options['className'] = $className;
