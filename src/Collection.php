@@ -396,7 +396,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
 
         $internalCollection = $this->connection()->getDatabase()->selectCollection($this->name());
 
-        $deleteResult = $internalCollection->deleteMany($query->compileQuery()['filter']);
+        $deleteResult = $internalCollection->deleteMany($query->compileQuery());
 
 //        $type = $this->connection()->getIndex()->getType($this->name());
         //        $response = $type->deleteByQuery($query->compileQuery());
