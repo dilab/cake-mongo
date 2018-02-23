@@ -240,7 +240,8 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
             }
 
             $alias = Inflector::singularize(substr(array_pop($parts), 0, -10));
-            $name = implode('\\', array_slice($parts, 0, -1)) . '\Document\\' . $alias;
+            array_splice($parts, array_search('Collection', $parts), 1, 'Document');
+            $name = implode('\\', $parts) . '\\' . $alias;
             if (!class_exists($name)) {
                 return $this->_documentClass = $default;
             }
