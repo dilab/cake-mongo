@@ -9,6 +9,7 @@ use Cake\Datasource\RulesAwareTrait;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventListenerInterface;
+use Cake\Event\EventManager;
 use Cake\ORM\RulesChecker;
 use Cake\Utility\Inflector;
 use Cake\Validation\ValidatorAwareTrait;
@@ -101,6 +102,30 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
         if (!empty($config['name'])) {
             $this->name($config['name']);
         }
+
+        $eventManager = $behaviors = null;
+        if (!empty($config['eventManager'])) {
+            $eventManager = $config['eventManager'];
+        }
+
+        $this->_eventManager = $eventManager ?: new EventManager();
+
+        $this->initialize($config);
+        $this->_eventManager->on($this);
+        $this->dispatchEvent('Model.initialize');
+    }
+
+    /**
+     * Initialize a table instance. Called after the constructor.
+     *
+     * You can use this method to define associations, attach behaviors
+     * define validation and do any other initialization logic you need.
+     *
+     * @param array $config Configuration options passed to the constructor
+     * @return void
+     */
+    public function initialize(array $config)
+    {
     }
 
     /**
