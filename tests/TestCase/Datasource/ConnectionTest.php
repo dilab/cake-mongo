@@ -1,9 +1,9 @@
 <?php
 
-namespace Dilab\CakeMongo\Test\TestCase\Datasource;
+namespace Imdad\CakeMongo\Test\TestCase\Datasource;
 
 use Cake\TestSuite\TestCase;
-use Dilab\CakeMongo\Datasource\Connection;
+use Imdad\CakeMongo\Datasource\Connection;
 
 class ConnectionTest extends TestCase
 {
@@ -50,11 +50,11 @@ class ConnectionTest extends TestCase
     public function testConstructDatabaseOption()
     {
         $connection = new Connection();
-        $this->assertSame('test',$connection->getDatabase()->getDatabaseName());
+        $this->assertSame('test', $connection->getDatabase()->getDatabaseName());
 
         $opts = ['database' => 'cake-mongo'];
         $connection = new Connection($opts);
-        $this->assertSame('cake-mongo',$connection->getDatabase()->getDatabaseName());
+        $this->assertSame('cake-mongo', $connection->getDatabase()->getDatabaseName());
     }
 
 }

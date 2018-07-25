@@ -1,7 +1,6 @@
 <?php
 
-
-namespace Dilab\CakeMongo;
+namespace Imdad\CakeMongo;
 
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\EntityTrait;
@@ -38,9 +37,9 @@ class Document implements EntityInterface
     public function __construct($data = [], $options = [])
     {
         if ($data instanceof BSONDocument) {
-            $data = (array)$data->bsonSerialize();
+            $data = (array) $data->bsonSerialize();
             if (isset($data['_id'])) {
-                $data['id'] = (string)$data['_id'];
+                $data['id'] = (string) $data['_id'];
                 unset($data['_id']);
             }
         }
@@ -77,6 +76,13 @@ class Document implements EntityInterface
             return;
         }
 
+         if (!empty($data) && $options['markClean'] && !$options['useSetters']) {
+
+            $this->_properties = $data;
+
+            return;
+        }
+
         if (!empty($data)) {
             $this->set($data, [
                 'setter' => $options['useSetters'],
@@ -84,4 +90,10 @@ class Document implements EntityInterface
             ]);
         }
     }
+
+    public function setSource($source)
+    {
+    $this->source($source);
+    }
+
 }

@@ -14,6 +14,7 @@ use Cake\Utility\Inflector;
 use Cake\Validation\ValidatorAwareTrait;
 use Imdad\CakeMongo\Datasource\MappingSchema;
 use Imdad\CakeMongo\Exception\NotFoundException;
+use Imdad\CakeMongo\Marshaller;
 use MongoDB\BSON\ObjectID;
 use MongoDB\Driver\Exception\InvalidArgumentException;
 
