@@ -1,12 +1,12 @@
 <?php
-namespace Dilab\CakeMongo\View\Form;
+namespace Imdad\CakeMongo\View\Form;
 
 use Cake\Collection\Collection;
 use Cake\Network\Request;
 use Cake\Utility\Inflector;
 use Cake\View\Form\ContextInterface;
-use Dilab\CakeMongo\CollectionRegistry;
-use Dilab\CakeMongo\Document;
+use Imdad\CakeMongo\CollectionRegistry;
+use Imdad\CakeMongo\Document;
 use RuntimeException;
 use Traversable;
 
@@ -90,7 +90,7 @@ class DocumentContext implements ContextInterface
             if ($isDocument) {
                 $collection = $entity->source();
             }
-            if (!$collection && $isDocument && get_class($entity) !== 'Dilab\CakeMongo\Document') {
+            if (!$collection && $isDocument && get_class($entity) !== 'Imdad\CakeMongo\Document') {
                 list(, $entityClass) = namespaceSplit(get_class($entity));
                 $collection = Inflector::pluralize($entityClass);
             }
