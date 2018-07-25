@@ -1,9 +1,8 @@
 <?php
 
-namespace Dilab\CakeMongo\Test\Fixture;
+namespace Imdad\CakeMongo\Test\Fixture;
 
-use Dilab\CakeMongo\TestSuite\TestFixture;
-
+use Imdad\CakeMongo\TestSuite\TestFixture;
 
 /**
  * Profile & Address test fixture.
@@ -32,7 +31,7 @@ class ProfilesFixture extends TestFixture
                 'city' => ['type' => 'string'],
                 'province' => ['type' => 'string'],
                 'country' => ['type' => 'string'],
-            ]
+            ],
         ],
     ];
 
@@ -49,8 +48,8 @@ class ProfilesFixture extends TestFixture
                 'street' => '123 street',
                 'city' => 'Toronto',
                 'province' => 'Ontario',
-                'country' => 'Canada'
-            ]
+                'country' => 'Canada',
+            ],
         ],
         [
             'id' => '4e49fd8269fd873c0a000000',
@@ -59,8 +58,8 @@ class ProfilesFixture extends TestFixture
                 'street' => '456 street',
                 'city' => 'Copenhagen',
                 'province' => 'Copenhagen',
-                'country' => 'Denmark'
-            ]
+                'country' => 'Denmark',
+            ],
         ],
         [
             'id' => '4cdfb11e1f3c000000007822',
@@ -70,15 +69,15 @@ class ProfilesFixture extends TestFixture
                     'street' => '456 street',
                     'city' => 'Copenhagen',
                     'province' => 'Copenhagen',
-                    'country' => 'Denmark'
+                    'country' => 'Denmark',
                 ],
                 [
                     'street' => '89 street',
                     'city' => 'Calgary',
                     'province' => 'Alberta',
-                    'country' => 'Canada'
-                ]
-            ]
+                    'country' => 'Canada',
+                ],
+            ],
         ],
     ];
 }

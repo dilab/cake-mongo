@@ -1,5 +1,5 @@
 <?php
-namespace Dilab\CakeMongo\TestSuite;
+namespace Imdad\CakeMongo\TestSuite;
 
 use Cake\Datasource\ConnectionInterface;
 use Cake\Datasource\FixtureInterface;

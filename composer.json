@@ -20,12 +20,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "Dilab\\CakeMongo\\": "src"
+            "Imdad\\CakeMongo\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Dilab\\CakeMongo\\Test\\": "tests",
+            "Imdad\\CakeMongo\\Test\\": "tests",
             "TestPlugin\\": "tests/testapp/Plugin/TestPlugin/src",
             "TestPluginTwo\\": "tests/testapp/Plugin/TestPluginTwo/src"
         }

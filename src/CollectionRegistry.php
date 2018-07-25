@@ -1,7 +1,7 @@
 <?php
 
+namespace Imdad\CakeMongo;
 
-namespace Dilab\CakeMongo;
 use Cake\Core\App;
 use Cake\Datasource\ConnectionManager;
 use Cake\Utility\Inflector;

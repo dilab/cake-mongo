@@ -2,8 +2,8 @@
 
 use Cake\Collection\Collection;
 use Cake\Event\EventManager;
-use Dilab\CakeMongo\Document;
-use Dilab\CakeMongo\View\Form\DocumentContext;
+use Imdad\CakeMongo\Document;
+use Imdad\CakeMongo\View\Form\DocumentContext;
 
 $listener = function ($event) {
     $controller = false;
@@ -11,7 +11,7 @@ $listener = function ($event) {
         $controller = $event->data['controller'];
     }
     if ($controller) {
-        $callback = ['Dilab\CakeMongo\CollectionRegistry', 'get'];
+        $callback = ['Imdad\CakeMongo\CollectionRegistry', 'get'];
         $controller->modelFactory('MongoDb', $callback);
         $controller->modelFactory('Mongo', $callback);
     }

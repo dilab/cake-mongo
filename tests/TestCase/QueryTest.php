@@ -1,12 +1,12 @@
 <?php
 
-namespace Dilab\CakeMongo\Test\TestCase;
+namespace Imdad\CakeMongo\Test\TestCase;
 
 use Cake\TestSuite\TestCase;
-use Dilab\CakeMongo\Collection;
-use Dilab\CakeMongo\Datasource\Connection;
-use Dilab\CakeMongo\FilterBuilder;
-use Dilab\CakeMongo\Query;
+use Imdad\CakeMongo\Collection;
+use Imdad\CakeMongo\Datasource\Connection;
+use Imdad\CakeMongo\FilterBuilder;
+use Imdad\CakeMongo\Query;
 use MongoDB\Driver\Cursor;
 
 /**
@@ -15,7 +15,7 @@ use MongoDB\Driver\Cursor;
  */
 class QueryTest extends TestCase
 {
-    public $fixtures = ['plugin.dilab/cake_mongo.articles'];
+    public $fixtures = ['plugin.imdad/cake_mongo.articles'];
 
     /**
      * Tests query constructor
@@ -145,8 +145,8 @@ class QueryTest extends TestCase
         $query->order('price');
         $this->assertSame([0 => [
             'price' => [
-                'order' => 'desc'
-            ]
+                'order' => 'desc',
+            ],
         ]], $query->clause('order'));
     }
 
@@ -190,8 +190,8 @@ class QueryTest extends TestCase
             'age >' => 29,
             'or' => [
                 'tags in' => ['cake', 'php'],
-                'interests not in' => ['c#', 'java']
-            ]
+                'interests not in' => ['c#', 'java'],
+            ],
         ]);
         $this->assertSame($query, $result);
 
@@ -202,8 +202,8 @@ class QueryTest extends TestCase
             'age' => ['$gt' => 29],
             '$or' => [
                 ['tags' => ['$in' => ['cake', 'php']]],
-                ['interests' => ['$nin' => ['c#', 'java']]]
-            ]
+                ['interests' => ['$nin' => ['c#', 'java']]],
+            ],
         ];
 
         $this->assertEquals($expected, $filter);
@@ -243,7 +243,7 @@ class QueryTest extends TestCase
         $query->applyOptions([
             'fields' => ['id', 'name'],
             'conditions' => [
-                'created >=' => '2013-01-01'
+                'created >=' => '2013-01-01',
             ],
             'limit' => 10,
             'order' => ['name' => 'des'],
@@ -254,12 +254,12 @@ class QueryTest extends TestCase
             'limit' => 10,
             'filter' => [
                 'created' => [
-                    '$gte' => '2013-01-01'
-                ]
+                    '$gte' => '2013-01-01',
+                ],
             ],
             'sort' => [
-                'name' => 1
-            ]
+                'name' => 1,
+            ],
         ];
 
         $mongoQuery = $query->compileQuery();
@@ -291,7 +291,7 @@ class QueryTest extends TestCase
             ->getMock();
 
         $connection = $this->getMockBuilder(
-            'Dilab\CakeMongo\Datasource\Connection'
+            'Imdad\CakeMongo\Datasource\Connection'
         )->setMethods(['getDatabase'])->getMock();
 
         $connection->expects($this->once())
@@ -300,7 +300,7 @@ class QueryTest extends TestCase
 
         $collection = new Collection([
             'name' => 'foo',
-            'connection' => $connection
+            'connection' => $connection,
         ]);
 
         $internalCollection = $this->getMockBuilder('MongoDB\Collection')
@@ -321,7 +321,7 @@ class QueryTest extends TestCase
 
         $query = new Query($collection);
         $resultSet = $query->all();
-        $this->assertInstanceOf('Dilab\CakeMongo\ResultSet', $resultSet);
+        $this->assertInstanceOf('Imdad\CakeMongo\ResultSet', $resultSet);
         $this->assertInstanceOf(Cursor::class, $resultSet->getInnerIterator());
     }
 

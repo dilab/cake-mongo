@@ -1,8 +1,6 @@
 <?php
 
-
-namespace Dilab\CakeMongo\Filter;
-
+namespace Imdad\CakeMongo\Filter;
 
 class ElementFilter extends AbstractFilter
 {
@@ -27,8 +25,8 @@ class ElementFilter extends AbstractFilter
 
             return [
                 $this->_field => [
-                    '$exists' => true
-                ]
+                    '$exists' => true,
+                ],
             ];
 
         }
@@ -37,12 +35,11 @@ class ElementFilter extends AbstractFilter
 
             return [
                 $this->_field => [
-                    '$exists' => false
-                ]
+                    '$exists' => false,
+                ],
             ];
 
         }
     }
-
 
 }

@@ -1,11 +1,11 @@
 <?php
-namespace Dilab\CakeMongo\Test\TestCase;
+namespace Imdad\CakeMongo\Test\TestCase;
 
 use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\TestCase;
-use Dilab\CakeMongo\Collection;
-use Dilab\CakeMongo\Document;
-use Dilab\CakeMongo\Marshaller;
+use Imdad\CakeMongo\Collection;
+use Imdad\CakeMongo\Document;
+use Imdad\CakeMongo\Marshaller;
 
 /**
  * Test entity for mass assignment.
@@ -25,7 +25,7 @@ class MarshallerTest extends TestCase
      *
      * @var array
      */
-    public $fixtures = ['plugin.dilab/cake_mongo.articles'];
+    public $fixtures = ['plugin.imdad/cake_mongo.articles'];
 
     /**
      * @var Collection
@@ -42,7 +42,7 @@ class MarshallerTest extends TestCase
         parent::setUp();
         $this->collection = new Collection([
             'name' => 'articles',
-            'connection' => ConnectionManager::get('test')
+            'connection' => ConnectionManager::get('test'),
         ]);
     }
 
@@ -61,7 +61,7 @@ class MarshallerTest extends TestCase
         $marshaller = new Marshaller($this->collection);
         $result = $marshaller->one($data);
 
-        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result);
+        $this->assertInstanceOf('Imdad\CakeMongo\Document', $result);
         $this->assertSame($data['title'], $result->title);
         $this->assertSame($data['body'], $result->body);
         $this->assertSame($data['user_id'], $result->user_id);
@@ -85,7 +85,7 @@ class MarshallerTest extends TestCase
         $marshaller = new Marshaller($this->collection);
         $result = $marshaller->one($data);
 
-        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result);
+        $this->assertInstanceOf('Imdad\CakeMongo\Document', $result);
         $this->assertNull($result->title, 'Invalid fields are not set.');
         $this->assertSame($data['body'], $result->body);
         $this->assertSame($data['user_id'], $result->user_id);
@@ -237,7 +237,7 @@ class MarshallerTest extends TestCase
             'comments' => [
                 ['comment' => 'First comment'],
                 ['comment' => 'Second comment'],
-                'bad' => 'data'
+                'bad' => 'data',
             ],
         ];
         $this->type->embedMany('Comments');
@@ -271,14 +271,14 @@ class MarshallerTest extends TestCase
                 'title' => 'Second article',
                 'body' => 'Stretchy text',
                 'user_id' => 2,
-            ]
+            ],
         ];
         $marshaller = new Marshaller($this->collection);
         $result = $marshaller->many($data);
 
         $this->assertCount(2, $result);
-        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result[0]);
-        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result[1]);
+        $this->assertInstanceOf('Imdad\CakeMongo\Document', $result[0]);
+        $this->assertInstanceOf('Imdad\CakeMongo\Document', $result[1]);
         $this->assertSame($data[0], $result[0]->toArray());
         $this->assertSame($data[1], $result[1]->toArray());
     }
@@ -325,7 +325,7 @@ class MarshallerTest extends TestCase
         $marshaller = new Marshaller($this->collection);
         $result = $marshaller->merge($doc, $data);
 
-        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result);
+        $this->assertInstanceOf('Imdad\CakeMongo\Document', $result);
         $this->assertSame('First article', $result->title, 'Invalid fields are not modified.');
         $this->assertNotEmpty($result->errors('title'), 'Should have an error.');
     }
@@ -421,7 +421,7 @@ class MarshallerTest extends TestCase
         ];
         $entity = new Document([
             'title' => 'Old',
-            'user' => new Document(['username' => 'old'], ['markNew' => false])
+            'user' => new Document(['username' => 'old'], ['markNew' => false]),
         ], ['markNew' => false]);
 
         $marshaller = new Marshaller($this->type);
@@ -483,7 +483,7 @@ class MarshallerTest extends TestCase
             'comments' => [
                 ['comment' => 'First comment'],
                 ['comment' => 'Second comment'],
-                'bad' => 'data'
+                'bad' => 'data',
             ],
         ];
         $this->type->embedMany('Comments');
@@ -493,7 +493,7 @@ class MarshallerTest extends TestCase
             'comments' => [
                 new Document(['comment' => 'old'], ['markNew' => false]),
                 new Document(['comment' => 'old'], ['markNew' => false]),
-            ]
+            ],
         ], ['markNew' => false]);
 
         $marshaller = new Marshaller($this->type);
@@ -522,14 +522,14 @@ class MarshallerTest extends TestCase
             'comments' => [
                 ['comment' => 'First comment'],
                 ['comment' => 'Second comment'],
-                'bad' => 'data'
+                'bad' => 'data',
             ],
         ];
         $entity = new Document([
             'title' => 'old',
             'comments' => [
                 new Document(['comment' => 'old'], ['markNew' => false]),
-            ]
+            ],
         ], ['markNew' => false]);
 
         $this->type->embedMany('Comments');

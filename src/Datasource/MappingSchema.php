@@ -1,5 +1,5 @@
 <?php
-namespace Dilab\CakeMongo\Datasource;
+namespace Imdad\CakeMongo\Datasource;
 
 /**
  * Object interface for MongoDB mapping information.
@@ -30,9 +30,9 @@ class MappingSchema
     {
         $this->name = $name;
 //        if (isset($data[$name]['properties'])) {
-//            $data = $data[$name]['properties'];
-//        }
-//        $this->data = $data;
+        //            $data = $data[$name]['properties'];
+        //        }
+        //        $this->data = $data;
     }
 
     /**
@@ -57,22 +57,22 @@ class MappingSchema
     {
         return 'flexible';
 //        if (strpos($name, '.') === false) {
-//            if (isset($this->data[$name])) {
-//                return $this->data[$name];
-//            }
-//
-//            return null;
-//        }
-//        $parts = explode('.', $name);
-//        $pointer = $this->data;
-//        foreach ($parts as $part) {
-//            if (isset($pointer[$part]['type']) && $pointer[$part]['type'] !== 'nested') {
-//                return $pointer[$part];
-//            }
-//            if (isset($pointer[$part]['properties'])) {
-//                $pointer = $pointer[$part]['properties'];
-//            }
-//        }
+        //            if (isset($this->data[$name])) {
+        //                return $this->data[$name];
+        //            }
+        //
+        //            return null;
+        //        }
+        //        $parts = explode('.', $name);
+        //        $pointer = $this->data;
+        //        foreach ($parts as $part) {
+        //            if (isset($pointer[$part]['type']) && $pointer[$part]['type'] !== 'nested') {
+        //                return $pointer[$part];
+        //            }
+        //            if (isset($pointer[$part]['properties'])) {
+        //                $pointer = $pointer[$part]['properties'];
+        //            }
+        //        }
     }
 
     /**
@@ -88,11 +88,11 @@ class MappingSchema
         return 'flexible';
 
 //        $field = $this->field($name);
-//        if (!$field) {
-//            return null;
-//        }
-//
-//        return $field['type'];
+        //        if (!$field) {
+        //            return null;
+        //        }
+        //
+        //        return $field['type'];
     }
 
     /**

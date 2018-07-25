@@ -1,7 +1,6 @@
 <?php
 
-
-namespace Dilab\CakeMongo;
+namespace Imdad\CakeMongo;
 
 use Cake\Core\App;
 use Cake\Datasource\EntityInterface;
@@ -13,8 +12,8 @@ use Cake\Event\EventListenerInterface;
 use Cake\ORM\RulesChecker;
 use Cake\Utility\Inflector;
 use Cake\Validation\ValidatorAwareTrait;
-use Dilab\CakeMongo\Datasource\MappingSchema;
-use Dilab\CakeMongo\Exception\NotFoundException;
+use Imdad\CakeMongo\Datasource\MappingSchema;
+use Imdad\CakeMongo\Exception\NotFoundException;
 use MongoDB\BSON\ObjectID;
 use MongoDB\Driver\Exception\InvalidArgumentException;
 
@@ -56,7 +55,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
     /**
      * Connection instance
      *
-     * @var \Dilab\CakeMongo\Datasource\Connection
+     * @var \Imdad\CakeMongo\Datasource\Connection
      */
     protected $_connection;
 
@@ -106,8 +105,8 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
     /**
      * Returns the connection instance or sets a new one
      *
-     * @param \Dilab\CakeMongo\Datasource\Connection $conn the new connection instance
-     * @return \Dilab\CakeMongo\Datasource\Connection
+     * @param \Imdad\CakeMongo\Datasource\Connection $conn the new connection instance
+     * @return \Imdad\CakeMongo\Datasource\Connection
      */
     public function connection($conn = null)
     {
@@ -141,37 +140,37 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
 
         return $this->_name;
     }
-    
+
     /**
-	 * Sets the type name / alias.
-	 *
-	 * @param string $alias Table alias
-	 * @return $this
-	 */
-	public function setAlias($alias)
-	{
-		$this->name($alias);
+     * Sets the type name / alias.
+     *
+     * @param string $alias Table alias
+     * @return $this
+     */
+    public function setAlias($alias)
+    {
+        $this->name($alias);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Returns the type name / alias.
-	 *
-	 * @return string
-	 */
-	public function getAlias()
-	{
-		return $this->name();
-	}
+    /**
+     * Returns the type name / alias.
+     *
+     * @return string
+     */
+    public function getAlias()
+    {
+        return $this->name();
+    }
 
     /**
      * Calls a finder method directly and applies it to the passed query
      *
      * @param string $type name of the finder to be called
-     * @param \Dilab\CakeMongo\Query $query The query object to apply the finder options to
+     * @param \Imdad\CakeMongo\Query $query The query object to apply the finder options to
      * @param array $options List of options to pass to the finder
-     * @return \Dilab\CakeMongo\Query
+     * @return \Imdad\CakeMongo\Query
      * @throws \BadMethodCallException
      */
     public function callFinder($type, Query $query, array $options = [])
@@ -199,7 +198,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
      *
      * @param string $type the type of query to perform
      * @param array $options An array that will be passed to Query::applyOptions
-     * @return \Dilab\CakeMongo\Query
+     * @return \Imdad\CakeMongo\Query
      */
     public function find($type = 'all', $options = [])
     {
@@ -211,9 +210,9 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
     /**
      * Returns the query as passed
      *
-     * @param \Dilab\CakeMongo\Query $query An MongoDB query object
+     * @param \Imdad\CakeMongo\Query $query An MongoDB query object
      * @param array $options An array of options to be used for query logic
-     * @return \Dilab\CakeMongo\Query
+     * @return \Imdad\CakeMongo\Query
      */
     public function findAll(Query $query, array $options = [])
     {
@@ -231,7 +230,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
     public function entityClass($name = null)
     {
         if ($name === null && !$this->_documentClass) {
-            $default = '\Dilab\CakeMongo\Document';
+            $default = '\Imdad\CakeMongo\Document';
             $self = get_called_class();
             $parts = explode('\\', $self);
 
@@ -332,8 +331,8 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
      *
      * @param string $primaryKey The document's primary key
      * @param array $options An array of options
-     * @throws \Dilab\CakeMongo\Exception\NotFoundException if no document exist with such id
-     * @return \Dilab\CakeMongo\Document A new CakeMongo document entity
+     * @throws \Imdad\CakeMongo\Exception\NotFoundException if no document exist with such id
+     * @return \Imdad\CakeMongo\Document A new CakeMongo document entity
      */
     public function get($primaryKey, $options = [])
     {
@@ -352,18 +351,17 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
             'source' => $this->name(),
         ];
 //        $data = $result->getData();
-//        $data['id'] = $result->getId();
-//        foreach ($this->embedded() as $embed) {
-//            $prop = $embed->property();
-//            if (isset($data[$prop])) {
-//                $data[$prop] = $embed->hydrate($data[$prop], $options);
-//            }
-//        }
+        //        $data['id'] = $result->getId();
+        //        foreach ($this->embedded() as $embed) {
+        //            $prop = $embed->property();
+        //            if (isset($data[$prop])) {
+        //                $data[$prop] = $embed->hydrate($data[$prop], $options);
+        //            }
+        //        }
 
-        $data = (array)$result->bsonSerialize();
-        $data['id'] = (string)$data['_id'];
+        $data = (array) $result->bsonSerialize();
+        $data['id'] = (string) $data['_id'];
         unset($data['_id']);
-
 
         return new $class($data, $options);
     }
@@ -400,7 +398,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
         $deleteResult = $internalCollection->deleteMany($query->compileQuery()['filter']);
 
 //        $type = $this->connection()->getIndex()->getType($this->name());
-//        $response = $type->deleteByQuery($query->compileQuery());
+        //        $response = $type->deleteByQuery($query->compileQuery());
 
         return $deleteResult->isAcknowledged();
     }
@@ -459,7 +457,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
         $options = new \ArrayObject($options);
         $event = $this->dispatchEvent('Model.beforeSave', [
             'entity' => $entity,
-            'options' => $options
+            'options' => $options,
         ]);
         if ($event->isStopped()) {
             return $event->result;
@@ -482,7 +480,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
 
             $insertOneResult = $collection->insertOne($data);
 
-            $entity->id = (string)$insertOneResult->getInsertedId();
+            $entity->id = (string) $insertOneResult->getInsertedId();
 
         } else {
 
@@ -499,7 +497,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
 
         $this->dispatchEvent('Model.afterSave', [
             'entity' => $entity,
-            'options' => $options
+            'options' => $options,
         ]);
 
         return $entity;
@@ -527,7 +525,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
         $options = new \ArrayObject($options);
         $event = $this->dispatchEvent('Model.beforeDelete', [
             'entity' => $entity,
-            'options' => $options
+            'options' => $options,
         ]);
         if ($event->isStopped()) {
             return $event->result;
@@ -542,7 +540,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
 
         $this->dispatchEvent('Model.afterDelete', [
             'entity' => $entity,
-            'options' => $options
+            'options' => $options,
         ]);
 
         return (1 == $deleteResult->getDeletedCount());
@@ -706,7 +704,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
     /**
      * Get a marshaller for this Collection instance.
      *
-     * @return \Dilab\CakeMongo\Marshaller
+     * @return \Imdad\CakeMongo\Marshaller
      */
     public function marshaller()
     {

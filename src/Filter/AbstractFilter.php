@@ -1,8 +1,6 @@
 <?php
 
-
-namespace Dilab\CakeMongo\Filter;
-
+namespace Imdad\CakeMongo\Filter;
 
 abstract class AbstractFilter
 {

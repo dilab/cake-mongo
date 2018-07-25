@@ -1,16 +1,15 @@
 <?php
 
+namespace Imdad\CakeMongo;
 
-namespace Dilab\CakeMongo;
-
-use Dilab\CakeMongo\Filter\AbstractFilter;
-use Dilab\CakeMongo\Filter\ComparisonFilter;
-use Dilab\CakeMongo\Filter\ElementFilter;
-use Dilab\CakeMongo\Filter\LogicFilter;
+use Imdad\CakeMongo\Filter\AbstractFilter;
+use Imdad\CakeMongo\Filter\ComparisonFilter;
+use Imdad\CakeMongo\Filter\ElementFilter;
+use Imdad\CakeMongo\Filter\LogicFilter;
 
 /**
  * Class FilterBuilder
- * @package Dilab\CakeMongo
+ * @package Imdad\CakeMongo
  * @see https://docs.mongodb.com/manual/tutorial/query-documents/#specify-query-filter-conditions
  *      https://docs.mongodb.com/manual/reference/operator/query/#query-and-projection-operators
  *
@@ -328,7 +327,7 @@ class FilterBuilder
      *
      * `<`, `>`, `<=`, `>=`, `in`, `not in`, `!=`, 'is', 'is not'
      *
-     * @param array|\Dilab\CakeMongo\Filter\AbstractFilter $conditions The list of conditions to parse.
+     * @param array|\Imdad\CakeMongo\Filter\AbstractFilter $conditions The list of conditions to parse.
      * @return array
      */
     public function parse($conditions)
@@ -379,7 +378,7 @@ class FilterBuilder
      *
      * @param string $field The filed name containing the operator
      * @param mixed $value The value to pass to the filter
-     * @return \Dilab\CakeMongo\AbstractFilter
+     * @return \Imdad\CakeMongo\AbstractFilter
      */
     protected function _parseFilter($field, $value)
     {
@@ -409,7 +408,7 @@ class FilterBuilder
         }
 
         if (in_array($operator, ['in', 'not in'])) {
-            $value = (array)$value;
+            $value = (array) $value;
         }
 
         if ($operator === 'in') {

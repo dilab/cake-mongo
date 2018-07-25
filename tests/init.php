@@ -11,7 +11,7 @@ Configure::write('App', [
     'namespace' => 'App',
     'paths' => [
         'plugins' => [APP . DS . 'testapp' . DS . 'Plugin' . DS],
-    ]
+    ],
 ]);
 
 Cache::config('_cake_core_', [
@@ -20,7 +20,7 @@ Cache::config('_cake_core_', [
 ]);
 
 if (!getenv('db_dsn')) {
-    putenv('db_dsn=Dilab\CakeMongo\Datasource\Connection://127.0.0.1:27017?database=test&driver=Dilab\CakeMongo\Datasource\Connection');
+    putenv('db_dsn=Imdad\CakeMongo\Datasource\Connection://127.0.0.1:27017?database=test&driver=Imdad\CakeMongo\Datasource\Connection');
 }
 
 ConnectionManager::config('test', ['url' => getenv('db_dsn')]);
