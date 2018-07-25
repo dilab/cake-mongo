@@ -1,8 +1,6 @@
 <?php
 
-
-namespace Dilab\CakeMongo\Filter;
-
+namespace Imdad\CakeMongo\Filter;
 
 class ComparisonFilter extends AbstractFilter
 {
@@ -37,8 +35,8 @@ class ComparisonFilter extends AbstractFilter
 
         return [
             $this->_field => [
-                '$' . $this->_operator => $this->_values
-            ]
+                '$' . $this->_operator => $this->_values,
+            ],
         ];
     }
 

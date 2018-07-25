@@ -59,11 +59,10 @@ class CollectionRegistry
      *
      * @param string $alias The name of the alias to get.
      * @param array $options Configuration options for the type constructor.
-     * @return \Dilab\CakeMongo\Collection
+     * @return \Imdad\CakeMongo\Collection
      */
     public static function get($alias, array $options = [])
     {
-
         if (isset(static::$instances[$alias])) {
             if (!empty($options) && static::$options[$alias] !== $options) {
                 throw new \RuntimeException(sprintf(
@@ -92,7 +91,7 @@ class CollectionRegistry
                 $options['name'] = Inflector::underscore($name);
             }
 
-            $options['className'] = 'Dilab\CakeMongo\Collection';
+            $options['className'] = 'Imdad\CakeMongo\Collection';
         }
 
         if (empty($options['connection'])) {
@@ -108,8 +107,8 @@ class CollectionRegistry
      * Set an instance.
      *
      * @param string $alias The alias to set.
-     * @param \Dilab\CakeMongo\Collection $object The type to set.
-     * @return \Dilab\CakeMongo\Collection
+     * @param \Imdad\CakeMongo\Collection $object The type to set.
+     * @return \Imdad\CakeMongo\Collection
      */
     public static function set($alias, Collection $object)
     {
