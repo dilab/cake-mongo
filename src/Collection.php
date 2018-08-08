@@ -452,7 +452,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
      * @param array $options An array of options to be used for the event
      * @return \Cake\Datasource\EntityInterface|bool
      */
-    public function save(EntityInterface $entity, $options = [])
+    public function save(EntityInterface $entity, $options = [], array $mongo_options = [])
     {
         $options += ['checkRules' => true];
         $options = new \ArrayObject($options);
@@ -474,22 +474,26 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
 
         $collection = $this->connection()->getDatabase()->selectCollection($this->name());
         $id = $entity->id ?: null;
+        $_id = $entity->_id ?: null;
         $data = $entity->toArray();
-        unset($data['id'], $data['_id']);
 
-        if (null == $id) {
-
-            $insertOneResult = $collection->insertOne($data);
-
-            $entity->id = (string) $insertOneResult->getInsertedId();
+        if ($_id) {
+            $collection->updateOne(
+                ['_id' => $_id],
+                ['$set' => $data],
+                $mongo_options
+            );
+        } else if ($id) {
+            $collection->updateOne(
+                ['_id' => new ObjectID($id)],
+                ['$set' => $data],
+                $mongo_options
+            );
 
         } else {
 
-            $collection->updateOne(
-                ['_id' => new ObjectID($id)],
-                ['$set' => $data]
-            );
-
+            $insertOneResult = $collection->insertOne($data);
+            $entity->id = (string) $insertOneResult->getInsertedId();
         }
 
         $entity->isNew(false);
