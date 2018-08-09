@@ -459,6 +459,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
         $event = $this->dispatchEvent('Model.beforeSave', [
             'entity' => $entity,
             'options' => $options,
+            'mongo_options' => $mongo_options,
         ]);
         if ($event->isStopped()) {
             return $event->result;
@@ -492,7 +493,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
 
         } else {
 
-            $insertOneResult = $collection->insertOne($data);
+            $insertOneResult = $collection->insertOne($data, $mongo_options);
             $entity->id = (string) $insertOneResult->getInsertedId();
         }
 
@@ -503,6 +504,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
         $this->dispatchEvent('Model.afterSave', [
             'entity' => $entity,
             'options' => $options,
+            'mongo_options' => $mongo_options,
         ]);
 
         return $entity;
@@ -520,7 +522,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
      * @param array $options The options for the delete.
      * @return bool success
      */
-    public function delete(EntityInterface $entity, $options = [])
+    public function delete(EntityInterface $entity, $options = [], array $mongo_options = [])
     {
         if (!$entity->has('id')) {
             $msg = 'Deleting requires an "id" value.';
@@ -531,6 +533,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
         $event = $this->dispatchEvent('Model.beforeDelete', [
             'entity' => $entity,
             'options' => $options,
+            'mongo_options' => $mongo_options,
         ]);
         if ($event->isStopped()) {
             return $event->result;
@@ -546,6 +549,7 @@ class Collection implements RepositoryInterface, EventListenerInterface, EventDi
         $this->dispatchEvent('Model.afterDelete', [
             'entity' => $entity,
             'options' => $options,
+            'mongo_options' => $mongo_options,
         ]);
 
         return (1 == $deleteResult->getDeletedCount());
