@@ -1,6 +1,6 @@
 <?php
 
-namespace Dilab\CakeMongo\Test\TestCase\View\Form;
+namespace Imdad\CakeMongo\Test\TestCase\View\Form;
 
 use ArrayIterator;
 use ArrayObject;
@@ -8,10 +8,10 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Network\Request;
 use Cake\TestSuite\TestCase;
 use Cake\Validation\Validator;
-use Dilab\CakeMongo\Collection;
-use Dilab\CakeMongo\CollectionRegistry;
-use Dilab\CakeMongo\Document;
-use Dilab\CakeMongo\View\Form\DocumentContext;
+use Imdad\CakeMongo\Collection;
+use Imdad\CakeMongo\CollectionRegistry;
+use Imdad\CakeMongo\Document;
+use Imdad\CakeMongo\View\Form\DocumentContext;
 
 /**
  * Test stub.
@@ -32,8 +32,8 @@ class DocumentContextTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.dilab/cake_mongo.articles',
-        'plugin.dilab/cake_mongo.profiles'
+        'plugin.imdad/cake_mongo.articles',
+        'plugin.imdad/cake_mongo.profiles',
     ];
 
     /**
@@ -123,14 +123,14 @@ class DocumentContextTest extends TestCase
         $one = new Article([
             'title' => 'First post',
             'body' => 'Stuff',
-            'user' => new Document(['username' => 'mark'])
+            'user' => new Document(['username' => 'mark']),
         ]);
         $one->errors('title', 'Required field');
 
         $two = new Article([
             'title' => 'Second post',
             'body' => 'Some text',
-            'user' => new Document(['username' => 'jose'])
+            'user' => new Document(['username' => 'jose']),
         ]);
         $two->errors('body', 'Not long enough');
 
@@ -165,7 +165,7 @@ class DocumentContextTest extends TestCase
     {
         $row = new Article([
             'title' => 'Test entity',
-            'body' => 'Something new'
+            'body' => 'Something new',
         ]);
         $context = new DocumentContext($this->request, [
             'entity' => $row,
@@ -195,7 +195,7 @@ class DocumentContextTest extends TestCase
             'comments' => [
                 new Document(['comment' => 'first comment']),
                 new Document(['comment' => 'second comment']),
-            ]
+            ],
         ]);
         $context = new DocumentContext($this->request, [
             'entity' => $row,
@@ -277,7 +277,7 @@ class DocumentContextTest extends TestCase
         $context = new DocumentContext($this->request, [
             'entity' => $entity,
             'collection' => $articles,
-            'validator' => 'alternate'
+            'validator' => 'alternate',
         ]);
         $this->assertFalse($context->isRequired('title'));
         $this->assertTrue($context->isRequired('body'));
@@ -358,7 +358,7 @@ class DocumentContextTest extends TestCase
             'comments' => [
                 new Document(['comment' => '']),
                 new Document(['comment' => 'Second comment']),
-            ]
+            ],
         ]);
         $row->comments[0]->errors('comment', ['Is required']);
         $row->comments[0]->errors('article_id', ['Is required']);
@@ -449,7 +449,7 @@ class DocumentContextTest extends TestCase
     /**
      * Setup an articles type for testing against.
      *
-     * @return \Dilab\CakeMongo\Collection
+     * @return \Imdad\CakeMongo\Collection
      */
     protected function setupType()
     {
@@ -460,12 +460,12 @@ class DocumentContextTest extends TestCase
         $articles->embedMany('Comments');
 
         $articles->validator()->add('title', 'notblank', [
-            'rule' => 'notBlank'
+            'rule' => 'notBlank',
         ]);
 
         $validator = new Validator();
         $validator->add('body', 'notblank', [
-            'rule' => 'notBlank'
+            'rule' => 'notBlank',
         ]);
         $articles->validator('alternate', $validator);
 

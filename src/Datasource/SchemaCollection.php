@@ -1,6 +1,6 @@
 <?php
-namespace Dilab\CakeMongo\Datasource;
 
+namespace Imdad\CakeMongo\Datasource;
 
 /**
  * Temporary shim for fixtures as they know too much about databases.
@@ -10,14 +10,14 @@ class SchemaCollection
     /**
      * The connection instance to use.
      *
-     * @var \Dilab\CakeMongo\Datasource\Connection
+     * @var \Imdad\CakeMongo\Datasource\Connection
      */
     protected $connection;
 
     /**
      * Constructor
      *
-     * @param \Dilab\CakeMongo\Datasource\Connection $connection The connection instance to use.
+     * @param \Imdad\CakeMongo\Datasource\Connection $connection The connection instance to use.
      */
     public function __construct($connection)
     {

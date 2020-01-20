@@ -1,6 +1,5 @@
 <?php
-namespace Dilab\CakeMongo\Datasource;
-
+namespace Imdad\CakeMongo\Datasource;
 
 use Cake\Datasource\ConnectionInterface;
 use MongoDB\Client;
@@ -43,7 +42,7 @@ class Connection extends Client implements ConnectionInterface
         }
 
         if (isset($config['log'])) {
-            $this->logQueries((bool)$config['log']);
+            $this->logQueries((bool) $config['log']);
         }
 
         $uri = sprintf('mongodb://%s:%s', $config['host'], $config['port']);
@@ -161,13 +160,11 @@ class Connection extends Client implements ConnectionInterface
      * Returns a SchemaCollection stub until we can add more
      * abstract API's in Connection.
      *
-     * @return \Dilab\CakeMongo\Datasource\SchemaCollection
+     * @return \Imdad\CakeMongo\Datasource\SchemaCollection
      */
     public function schemaCollection()
     {
         return new SchemaCollection($this);
     }
-
-
 
 }

@@ -1,8 +1,6 @@
 <?php
 
-
-namespace Dilab\CakeMongo\Filter;
-
+namespace Imdad\CakeMongo\Filter;
 
 class LogicFilter extends AbstractFilter
 {
@@ -33,15 +31,15 @@ class LogicFilter extends AbstractFilter
             $fieldName = $filter->getField();
             return [
                 $fieldName => [
-                    '$not' => $filter->toArray()[$fieldName]
-                ]
+                    '$not' => $filter->toArray()[$fieldName],
+                ],
             ];
         }
 
         return [
             '$' . $this->_logic => array_map(function (AbstractFilter $filter) {
                 return $filter->toArray();
-            }, $this->_filters)
+            }, $this->_filters),
         ];
     }
 

@@ -1,8 +1,8 @@
 <?php
-namespace Dilab\CakeMongo\Test\TestCase;
+namespace Imdad\CakeMongo\Test\TestCase;
 
 use Cake\TestSuite\TestCase;
-use Dilab\CakeMongo\FilterBuilder;
+use Imdad\CakeMongo\FilterBuilder;
 
 class FilterBuilderTest extends TestCase
 {
@@ -16,13 +16,13 @@ class FilterBuilderTest extends TestCase
         $builder = new FilterBuilder();
         $result = $builder->eq('price', 10)->toArray();
         $expected = [
-            'price' => 10
+            'price' => 10,
         ];
         $this->assertEquals($expected, $result);
 
         $result = $builder->eq('year', '2014')->toArray();
         $expected = [
-            'year' => 2014
+            'year' => 2014,
         ];
         $this->assertEquals($expected, $result);
     }
@@ -37,13 +37,13 @@ class FilterBuilderTest extends TestCase
         $builder = new FilterBuilder();
         $result = $builder->gt('price', 10)->toArray();
         $expected = [
-            'price' => ['$gt' => 10]
+            'price' => ['$gt' => 10],
         ];
         $this->assertEquals($expected, $result);
 
         $result = $builder->gt('year', '2014')->toArray();
         $expected = [
-            'year' => ['$gt' => 2014]
+            'year' => ['$gt' => 2014],
         ];
         $this->assertEquals($expected, $result);
     }
@@ -58,13 +58,13 @@ class FilterBuilderTest extends TestCase
         $builder = new FilterBuilder();
         $result = $builder->gte('price', 10)->toArray();
         $expected = [
-            'price' => ['$gte' => 10]
+            'price' => ['$gte' => 10],
         ];
         $this->assertEquals($expected, $result);
 
         $result = $builder->gte('year', '2014')->toArray();
         $expected = [
-            'year' => ['$gte' => 2014]
+            'year' => ['$gte' => 2014],
         ];
         $this->assertEquals($expected, $result);
     }
@@ -79,13 +79,13 @@ class FilterBuilderTest extends TestCase
         $builder = new FilterBuilder();
         $result = $builder->lt('price', 10)->toArray();
         $expected = [
-            'price' => ['$lt' => 10]
+            'price' => ['$lt' => 10],
         ];
         $this->assertEquals($expected, $result);
 
         $result = $builder->lt('year', '2014')->toArray();
         $expected = [
-            'year' => ['$lt' => 2014]
+            'year' => ['$lt' => 2014],
         ];
         $this->assertEquals($expected, $result);
     }
@@ -100,13 +100,13 @@ class FilterBuilderTest extends TestCase
         $builder = new FilterBuilder();
         $result = $builder->lte('price', 10)->toArray();
         $expected = [
-            'price' => ['$lte' => 10]
+            'price' => ['$lte' => 10],
         ];
         $this->assertEquals($expected, $result);
 
         $result = $builder->lte('year', '2014')->toArray();
         $expected = [
-            'year' => ['$lte' => 2014]
+            'year' => ['$lte' => 2014],
         ];
         $this->assertEquals($expected, $result);
     }
@@ -121,13 +121,13 @@ class FilterBuilderTest extends TestCase
         $builder = new FilterBuilder();
         $result = $builder->ne('price', 10)->toArray();
         $expected = [
-            'price' => ['$ne' => 10]
+            'price' => ['$ne' => 10],
         ];
         $this->assertEquals($expected, $result);
 
         $result = $builder->ne('year', '2014')->toArray();
         $expected = [
-            'year' => ['$ne' => 2014]
+            'year' => ['$ne' => 2014],
         ];
         $this->assertEquals($expected, $result);
     }
@@ -142,13 +142,13 @@ class FilterBuilderTest extends TestCase
         $builder = new FilterBuilder();
         $result = $builder->in('price', 10)->toArray();
         $expected = [
-            'price' => ['$in' => [10]]
+            'price' => ['$in' => [10]],
         ];
         $this->assertEquals($expected, $result);
 
         $result = $builder->in('year', [2014, 2015])->toArray();
         $expected = [
-            'year' => ['$in' => [2014, 2015]]
+            'year' => ['$in' => [2014, 2015]],
         ];
         $this->assertEquals($expected, $result);
     }
@@ -163,13 +163,13 @@ class FilterBuilderTest extends TestCase
         $builder = new FilterBuilder();
         $result = $builder->nin('price', 10)->toArray();
         $expected = [
-            'price' => ['$nin' => [10]]
+            'price' => ['$nin' => [10]],
         ];
         $this->assertEquals($expected, $result);
 
         $result = $builder->nin('year', [2014, 2015])->toArray();
         $expected = [
-            'year' => ['$nin' => [2014, 2015]]
+            'year' => ['$nin' => [2014, 2015]],
         ];
         $this->assertEquals($expected, $result);
     }
@@ -190,8 +190,8 @@ class FilterBuilderTest extends TestCase
         $expected = [
             '$or' => [
                 ['quantity' => ['$lt' => 20]],
-                ['price' => 10]
-            ]
+                ['price' => 10],
+            ],
         ];
         $this->assertEquals($expected, $result);
     }
@@ -212,8 +212,8 @@ class FilterBuilderTest extends TestCase
         $expected = [
             '$and' => [
                 ['quantity' => ['$lt' => 20]],
-                ['price' => 10]
-            ]
+                ['price' => 10],
+            ],
         ];
         $this->assertEquals($expected, $result);
     }
@@ -233,8 +233,8 @@ class FilterBuilderTest extends TestCase
 
         $expected = [
             'title' => [
-                '$not' => ['$in' => ['cake', 'orm']]
-            ]
+                '$not' => ['$in' => ['cake', 'orm']],
+            ],
         ];
 
         $this->assertEquals($expected, $result);
@@ -257,8 +257,8 @@ class FilterBuilderTest extends TestCase
         $expected = [
             '$nor' => [
                 ['title' => 1],
-                ['quantity' => ['$lt' => 20]]
-            ]
+                ['quantity' => ['$lt' => 20]],
+            ],
         ];
 
         $this->assertEquals($expected, $result);
@@ -331,7 +331,7 @@ class FilterBuilderTest extends TestCase
             $builder->exists('tags'),
             $builder->eq('address', 'something'),
             $builder->not($builder->eq('address', 'something else')),
-            $builder->not($builder->eq('last_name', 'gonzalez'))
+            $builder->not($builder->eq('last_name', 'gonzalez')),
         ];
         $this->assertEquals($expected, $filter);
     }
@@ -348,14 +348,14 @@ class FilterBuilderTest extends TestCase
         $filter = $builder->parse([
             'or' => [
                 'name' => 'jose',
-                'age >' => 29
-            ]
+                'age >' => 29,
+            ],
         ]);
         $expected = [
             $builder->or(
                 $builder->eq('name', 'jose'),
                 $builder->gt('age', 29)
-            )
+            ),
         ];
         $this->assertEquals($expected, $filter);
     }
@@ -371,14 +371,14 @@ class FilterBuilderTest extends TestCase
         $filter = $builder->parse([
             'and' => [
                 'name' => 'jose',
-                'age >' => 29
-            ]
+                'age >' => 29,
+            ],
         ]);
         $expected = [
             $builder->and(
                 $builder->eq('name', 'jose'),
                 $builder->gt('age', 29)
-            )
+            ),
         ];
         $this->assertEquals($expected, $filter);
     }
@@ -394,14 +394,14 @@ class FilterBuilderTest extends TestCase
         $filter = $builder->parse([
             'not' => [
                 'name' => 'jose',
-                'age >' => 29
-            ]
+                'age >' => 29,
+            ],
         ]);
         $expected = [
             $builder->nor(
                 $builder->eq('name', 'jose'),
                 $builder->gt('age', 29)
-            )
+            ),
         ];
         $this->assertEquals($expected, $filter);
     }
@@ -418,13 +418,13 @@ class FilterBuilderTest extends TestCase
             $builder->eq('name', 'jose'),
             'not' => [
                 'name' => 'xu',
-            ]
+            ],
         ]);
         $expected = [
             $builder->eq('name', 'jose'),
             $builder->nor(
                 $builder->eq('name', 'xu')
-            )
+            ),
         ];
         $this->assertEquals($expected, $filter);
 

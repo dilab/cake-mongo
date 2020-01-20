@@ -1,6 +1,6 @@
 <?php
 
-namespace Dilab\CakeMongo;
+namespace Imdad\CakeMongo;
 
 use Cake\Collection\CollectionTrait;
 use Countable;
@@ -26,7 +26,7 @@ class ResultSet extends IteratorIterator implements Countable, JsonSerializable
     /**
      * The full class name of the document class to wrap the results
      *
-     * @var \Dilab\CakeMongo\Document
+     * @var \Imdad\CakeMongo\Document
      */
     protected $entityClass;
 
@@ -70,7 +70,7 @@ class ResultSet extends IteratorIterator implements Countable, JsonSerializable
     /**
      * Returns the current document for the iteration
      *
-     * @return \Dilab\CakeMongo\Document
+     * @return \Imdad\CakeMongo\Document
      */
     public function current()
     {
@@ -82,11 +82,11 @@ class ResultSet extends IteratorIterator implements Countable, JsonSerializable
             'useSetters' => false,
             'markNew' => false,
             'source' => $this->repoName,
-            'result' => $result
+            'result' => $result,
         ];
 
-        $data = (array)$result->bsonSerialize();
-        $data['id'] = (string)$data['_id'];
+        $data = (array) $result->bsonSerialize();
+        $data['id'] = (string) $data['_id'];
         unset($data['_id']);
 
         $document = new $class($data, $options);

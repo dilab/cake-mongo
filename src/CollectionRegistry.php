@@ -1,7 +1,7 @@
 <?php
 
+namespace Imdad\CakeMongo;
 
-namespace Dilab\CakeMongo;
 use Cake\Core\App;
 use Cake\Datasource\ConnectionManager;
 use Cake\Utility\Inflector;
@@ -59,11 +59,10 @@ class CollectionRegistry
      *
      * @param string $alias The name of the alias to get.
      * @param array $options Configuration options for the type constructor.
-     * @return \Dilab\CakeMongo\Collection
+     * @return \Imdad\CakeMongo\Collection
      */
     public static function get($alias, array $options = [])
     {
-
         if (isset(static::$instances[$alias])) {
             if (!empty($options) && static::$options[$alias] !== $options) {
                 throw new \RuntimeException(sprintf(
@@ -77,12 +76,15 @@ class CollectionRegistry
 
         static::$options[$alias] = $options;
         list(, $classAlias) = pluginSplit($alias);
+        $parts = explode('/', $classAlias);
+        $classAlias = array_pop($parts);
+        $type = 'Model/Collection' . (count($parts) ? '/' . implode('/', $parts) : '');
         $options = $options + ['name' => Inflector::underscore($classAlias)];
 
         if (empty($options['className'])) {
-            $options['className'] = Inflector::camelize($alias);
+            $options['className'] = Inflector::camelize($classAlias);
         }
-        $className = App::className($options['className'], 'Model/Collection', 'Collection');
+        $className = App::className($options['className'], $type, 'Collection');
 
         if ($className) {
             $options['className'] = $className;
@@ -92,7 +94,7 @@ class CollectionRegistry
                 $options['name'] = Inflector::underscore($name);
             }
 
-            $options['className'] = 'Dilab\CakeMongo\Collection';
+            $options['className'] = 'Imdad\CakeMongo\Collection';
         }
 
         if (empty($options['connection'])) {
@@ -108,8 +110,8 @@ class CollectionRegistry
      * Set an instance.
      *
      * @param string $alias The alias to set.
-     * @param \Dilab\CakeMongo\Collection $object The type to set.
-     * @return \Dilab\CakeMongo\Collection
+     * @param \Imdad\CakeMongo\Collection $object The type to set.
+     * @return \Imdad\CakeMongo\Collection
      */
     public static function set($alias, Collection $object)
     {

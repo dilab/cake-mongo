@@ -1,8 +1,6 @@
 <?php
 
-
-namespace Dilab\CakeMongo\Exception;
-
+namespace Imdad\CakeMongo\Exception;
 
 class NotFoundException extends \Exception
 {

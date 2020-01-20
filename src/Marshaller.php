@@ -1,8 +1,6 @@
 <?php
 
-
-namespace Dilab\CakeMongo;
-
+namespace Imdad\CakeMongo;
 
 use Cake\Datasource\EntityInterface;
 
@@ -12,14 +10,14 @@ class Marshaller
     /**
      * Type instance this marshaller is for.
      *
-     * @var \Dilab\CakeMongo\Collection
+     * @var \Imdad\CakeMongo\Collection
      */
     protected $collection;
 
     /**
      * Constructor
      *
-     * @param \Dilab\CakeMongo\Collection $collection The collection instance this marshaller is for.
+     * @param \Imdad\CakeMongo\Collection $collection The collection instance this marshaller is for.
      */
     public function __construct(Collection $collection)
     {
@@ -54,7 +52,7 @@ class Marshaller
 
         return $options['validate']->errors($data, $isNew);
     }
-    
+
     /**
      * Hydrate a single document.
      *
@@ -67,7 +65,7 @@ class Marshaller
      *
      * @param array $data The data to hydrate.
      * @param array $options List of options
-     * @return \Dilab\CakeMongo\Document;
+     * @return \Imdad\CakeMongo\Document;
      */
     public function one(array $data, array $options = [])
     {
@@ -79,7 +77,7 @@ class Marshaller
         list($data, $options) = $this->_prepareDataAndOptions($data, $options);
 
         if (isset($options['accessibleFields'])) {
-            foreach ((array)$options['accessibleFields'] as $key => $value) {
+            foreach ((array) $options['accessibleFields'] as $key => $value) {
                 $entity->accessible($key, $value);
             }
         }
@@ -90,13 +88,13 @@ class Marshaller
         }
 
 //        foreach ($this->collection->embedded() as $embed) {
-//            $property = $embed->property();
-//            if (in_array($embed->alias(), $options['associated']) &&
-//                isset($data[$property])
-//            ) {
-//                $data[$property] = $this->newNested($embed, $data[$property]);
-//            }
-//        }
+        //            $property = $embed->property();
+        //            if (in_array($embed->alias(), $options['associated']) &&
+        //                isset($data[$property])
+        //            ) {
+        //                $data[$property] = $this->newNested($embed, $data[$property]);
+        //            }
+        //        }
 
         if (!isset($options['fieldList'])) {
             $entity->set($data);
@@ -104,7 +102,7 @@ class Marshaller
             return $entity;
         }
 
-        foreach ((array)$options['fieldList'] as $field) {
+        foreach ((array) $options['fieldList'] as $field) {
             if (array_key_exists($field, $data)) {
                 $entity->set($field, $data[$field]);
             }
@@ -163,13 +161,13 @@ class Marshaller
         }
 
 //        foreach ($this->collection->embedded() as $embed) {
-//            $property = $embed->property();
-//            if (in_array($embed->alias(), $options['associated']) &&
-//                isset($data[$property])
-//            ) {
-//                $data[$property] = $this->mergeNested($embed, $entity->{$property}, $data[$property]);
-//            }
-//        }
+        //            $property = $embed->property();
+        //            if (in_array($embed->alias(), $options['associated']) &&
+        //                isset($data[$property])
+        //            ) {
+        //                $data[$property] = $this->mergeNested($embed, $entity->{$property}, $data[$property]);
+        //            }
+        //        }
 
         if (!isset($options['fieldList'])) {
             $entity->set($data);
@@ -177,7 +175,7 @@ class Marshaller
             return $entity;
         }
 
-        foreach ((array)$options['fieldList'] as $field) {
+        foreach ((array) $options['fieldList'] as $field) {
             if (array_key_exists($field, $data)) {
                 $entity->set($field, $data[$field]);
             }
@@ -252,6 +250,6 @@ class Marshaller
         $options = new \ArrayObject($options);
         $this->collection->dispatchEvent('Model.beforeMarshal', compact('data', 'options'));
 
-        return [(array)$data, (array)$options];
+        return [(array) $data, (array) $options];
     }
 }

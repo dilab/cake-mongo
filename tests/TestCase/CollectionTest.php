@@ -1,11 +1,11 @@
 <?php
 
-namespace Dilab\CakeMongo\Test\TestCase;
+namespace Imdad\CakeMongo\Test\TestCase;
 
 use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\TestCase;
-use Dilab\CakeMongo\Collection;
-use Dilab\CakeMongo\Document;
+use Imdad\CakeMongo\Collection;
+use Imdad\CakeMongo\Document;
 
 class CollectionTest extends TestCase
 {
@@ -14,14 +14,14 @@ class CollectionTest extends TestCase
      */
     public $collection;
 
-    public $fixtures = ['plugin.dilab/cake_mongo.articles'];
+    public $fixtures = ['plugin.imdad/cake_mongo.articles'];
 
     public function setUp()
     {
         parent::setUp();
         $this->collection = new Collection([
             'name' => 'articles',
-            'connection' => ConnectionManager::get('test')
+            'connection' => ConnectionManager::get('test'),
         ]);
     }
 
@@ -33,7 +33,7 @@ class CollectionTest extends TestCase
     public function testFindAll()
     {
         $query = $this->collection->find('all');
-        $this->assertInstanceOf('Dilab\CakeMongo\Query', $query);
+        $this->assertInstanceOf('Imdad\CakeMongo\Query', $query);
         $this->assertSame($this->collection, $query->repository());
     }
 
@@ -44,7 +44,7 @@ class CollectionTest extends TestCase
      */
     public function testEntityClassDefault()
     {
-        $this->assertEquals('\Dilab\CakeMongo\Document', $this->collection->entityClass());
+        $this->assertEquals('\Imdad\CakeMongo\Document', $this->collection->entityClass());
     }
 
     /**
@@ -76,7 +76,7 @@ class CollectionTest extends TestCase
      */
     public function testTableClassInApp()
     {
-        $class = $this->getMockClass('\Dilab\CakeMongo\Document');
+        $class = $this->getMockClass('\Imdad\CakeMongo\Document');
         class_alias($class, 'App\Model\Document\TestUser');
 
         $collection = new Collection();
@@ -94,7 +94,7 @@ class CollectionTest extends TestCase
      */
     public function testTableClassInPlugin()
     {
-        $class = $this->getMockClass('\Dilab\Mongo\Document');
+        $class = $this->getMockClass('\Imdad\Mongo\Document');
         class_alias($class, 'MyPlugin\Model\Document\SuperUser');
 
         $collection = new Collection();
@@ -112,13 +112,13 @@ class CollectionTest extends TestCase
     public function testGet()
     {
         $result = $this->collection->get('507f191e810c19729de860ea');
-        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result);
+        $this->assertInstanceOf('Imdad\CakeMongo\Document', $result);
         $this->assertEquals([
             'title' => 'First article',
             'user_id' => 1,
             'body' => 'A big box of bolts and nuts.',
             'created' => '2014-04-01T15:01:30',
-            'id' => '507f191e810c19729de860ea'
+            'id' => '507f191e810c19729de860ea',
         ], $result->toArray());
         $this->assertFalse($result->dirty());
         $this->assertFalse($result->isNew());
@@ -132,10 +132,10 @@ class CollectionTest extends TestCase
     public function testNewEntity()
     {
         $data = [
-            'title' => 'A newer title'
+            'title' => 'A newer title',
         ];
         $result = $this->collection->newEntity($data);
-        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result);
+        $this->assertInstanceOf('Imdad\CakeMongo\Document', $result);
         $this->assertSame($data, $result->toArray());
         $this->assertEquals('articles', $result->source());
     }
@@ -149,16 +149,16 @@ class CollectionTest extends TestCase
     {
         $data = [
             [
-                'title' => 'A newer title'
+                'title' => 'A newer title',
             ],
             [
-                'title' => 'A second title'
+                'title' => 'A second title',
             ],
         ];
         $result = $this->collection->newEntities($data);
         $this->assertCount(2, $result);
-        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result[0]);
-        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result[1]);
+        $this->assertInstanceOf('Imdad\CakeMongo\Document', $result[0]);
+        $this->assertInstanceOf('Imdad\CakeMongo\Document', $result[1]);
         $this->assertSame($data[0], $result[0]->toArray());
         $this->assertSame($data[1], $result[1]->toArray());
     }
@@ -172,7 +172,7 @@ class CollectionTest extends TestCase
     {
         $doc = new Document([
             'title' => 'A brand new article',
-            'body' => 'Some new content'
+            'body' => 'Some new content',
         ], ['markNew' => true]);
         $this->assertSame($doc, $this->collection->save($doc));
         $this->assertNotEmpty($doc->id, 'Should get an id');
@@ -195,7 +195,7 @@ class CollectionTest extends TestCase
         $doc = new Document([
             'id' => '507f191e810c19729de860ea',
             'title' => 'A brand new article',
-            'body' => 'Some new content'
+            'body' => 'Some new content',
         ], ['markNew' => false]);
         $this->assertSame($doc, $this->collection->save($doc));
         $this->assertFalse($doc->isNew(), 'Not new.');
@@ -213,7 +213,7 @@ class CollectionTest extends TestCase
         $doc = new Document([
             'id' => '507f191e810c19729de860ea',
             'title' => 'A brand new article',
-            'body' => 'Some new content'
+            'body' => 'Some new content',
         ], ['markNew' => false]);
         $doc->setErrors(['title' => ['bad news']]);
         $this->assertFalse($this->collection->save($doc), 'Should not save.');
@@ -283,7 +283,7 @@ class CollectionTest extends TestCase
         $entity = new Document([
             'title' => 'A brand new article',
             'body' => 'Some new content',
-            'user' => new Document(['username' => 'sarah'])
+            'user' => new Document(['username' => 'sarah']),
         ]);
         $this->type->embedOne('User');
         $this->type->save($entity);
@@ -308,7 +308,7 @@ class CollectionTest extends TestCase
             'comments' => [
                 new Document(['comment' => 'Nice post']),
                 new Document(['comment' => 'Awesome!']),
-            ]
+            ],
         ]);
         $this->type->embedMany('Comments');
         $this->type->save($entity);
@@ -368,7 +368,7 @@ class CollectionTest extends TestCase
     {
         $doc = new Document([
             'title' => 'A brand new article',
-            'body' => 'Some new content'
+            'body' => 'Some new content',
         ], ['markNew' => true]);
         $this->assertSame($doc, $this->collection->save($doc));
         $this->assertNotEmpty($doc->id, 'Should get an id');
@@ -588,7 +588,7 @@ class CollectionTest extends TestCase
         $this->assertInstanceOf('Cake\Event\EventListenerInterface', $this->collection);
 
         $collection = $this->getMock(
-            'Dilab\CakeMongo\Collection',
+            'Imdad\CakeMongo\Collection',
             ['beforeFind', 'beforeSave', 'afterSave', 'beforeDelete', 'afterDelete']
         );
         $result = $collection->implementedEvents();
@@ -612,10 +612,10 @@ class CollectionTest extends TestCase
     {
         $result = $this->collection->get('507f191e810c19729de860ea');
         $data = [
-            'title' => 'A newer title'
+            'title' => 'A newer title',
         ];
         $result = $this->collection->patchEntity($result, $data);
-        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result);
+        $this->assertInstanceOf('Imdad\CakeMongo\Document', $result);
         $this->assertSame('A newer title', $result->toArray()['title']);
     }
 
@@ -629,7 +629,7 @@ class CollectionTest extends TestCase
         $result = [$this->collection->get('507f191e810c19729de860ea')];
         $data = [['title' => 'A newer title']];
         $result = $this->collection->patchEntities($result, $data);
-        $this->assertInstanceOf('Dilab\CakeMongo\Document', $result[0]);
+        $this->assertInstanceOf('Imdad\CakeMongo\Document', $result[0]);
         $this->assertSame('A newer title', $result[0]->toArray()['title']);
     }
 }

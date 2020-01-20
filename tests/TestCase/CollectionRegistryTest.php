@@ -1,11 +1,11 @@
 <?php
-namespace Dilab\CakeMongo\Test\TestCase;
+namespace Imdad\CakeMongo\Test\TestCase;
 
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\TestSuite\TestCase;
-use Dilab\CakeMongo\Collection;
-use Dilab\CakeMongo\CollectionRegistry;
+use Imdad\CakeMongo\Collection;
+use Imdad\CakeMongo\CollectionRegistry;
 
 /**
  * Used to test correct class is instantiated when using CollectionRegistry::get();
@@ -83,7 +83,7 @@ class CollectionRegistryTest extends TestCase
         $result = CollectionRegistry::get('Articles', [
             'name' => 'my_articles',
         ]);
-        $this->assertInstanceOf('Dilab\CakeMongo\Collection', $result);
+        $this->assertInstanceOf('Imdad\CakeMongo\Collection', $result);
         $this->assertEquals('my_articles', $result->name());
 
         $result2 = CollectionRegistry::get('Articles');
@@ -99,27 +99,27 @@ class CollectionRegistryTest extends TestCase
     public function testGetFallbacks()
     {
         $result = CollectionRegistry::get('Droids');
-        $this->assertInstanceOf('Dilab\CakeMongo\Collection', $result);
+        $this->assertInstanceOf('Imdad\CakeMongo\Collection', $result);
         $this->assertEquals('droids', $result->name());
 
         $result = CollectionRegistry::get('R2D2', ['className' => 'Droids']);
-        $this->assertInstanceOf('Dilab\CakeMongo\Collection', $result);
+        $this->assertInstanceOf('Imdad\CakeMongo\Collection', $result);
         $this->assertEquals('r2_d2', $result->name(), 'The name should be derived from the alias');
 
         $result = CollectionRegistry::get('C3P0', ['className' => 'Droids', 'name' => 'droids']);
-        $this->assertInstanceOf('Dilab\CakeMongo\Collection', $result);
+        $this->assertInstanceOf('Imdad\CakeMongo\Collection', $result);
         $this->assertEquals('droids', $result->name(), 'The name should be taken from options');
 
         $result = CollectionRegistry::get('Funky.Chipmunks');
-        $this->assertInstanceOf('Dilab\CakeMongo\Collection', $result);
+        $this->assertInstanceOf('Imdad\CakeMongo\Collection', $result);
         $this->assertEquals('chipmunks', $result->name(), 'The name should be derived from the alias');
 
         $result = CollectionRegistry::get('Awesome', ['className' => 'Funky.Monkies']);
-        $this->assertInstanceOf('Dilab\CakeMongo\Collection', $result);
+        $this->assertInstanceOf('Imdad\CakeMongo\Collection', $result);
         $this->assertEquals('awesome', $result->name(), 'The name should be derived from the alias');
 
-        $result = CollectionRegistry::get('Stuff', ['className' => 'Dilab\CakeMongo\Collection']);
-        $this->assertInstanceOf('Dilab\CakeMongo\Collection', $result);
+        $result = CollectionRegistry::get('Stuff', ['className' => 'Imdad\CakeMongo\Collection']);
+        $this->assertInstanceOf('Imdad\CakeMongo\Collection', $result);
         $this->assertEquals('stuff', $result->name(), 'The name should be derived from the alias');
     }
 
@@ -189,17 +189,17 @@ class CollectionRegistryTest extends TestCase
         $plugin1 = CollectionRegistry::get('TestPlugin.Comments');
         $plugin2 = CollectionRegistry::get('TestPluginTwo.Comments');
 
-        $this->assertInstanceOf('Dilab\CakeMongo\Collection', $app, 'Should be a generic instance');
+        $this->assertInstanceOf('Imdad\CakeMongo\Collection', $app, 'Should be a generic instance');
         $this->assertInstanceOf('TestPlugin\Model\Collection\CommentsCollection', $plugin1, 'Should be a concrete class');
-        $this->assertInstanceOf('Dilab\CakeMongo\Collection', $plugin2, 'Should be a plugin 2 generic instance');
+        $this->assertInstanceOf('Imdad\CakeMongo\Collection', $plugin2, 'Should be a plugin 2 generic instance');
 
         $plugin2 = CollectionRegistry::get('TestPluginTwo.Comments');
         $plugin1 = CollectionRegistry::get('TestPlugin.Comments');
         $app = CollectionRegistry::get('Comments');
 
-        $this->assertInstanceOf('Dilab\CakeMongo\Collection', $app, 'Should still be a generic instance');
+        $this->assertInstanceOf('Imdad\CakeMongo\Collection', $app, 'Should still be a generic instance');
         $this->assertInstanceOf('TestPlugin\Model\Collection\CommentsCollection', $plugin1, 'Should still be a concrete class');
-        $this->assertInstanceOf('Dilab\CakeMongo\Collection', $plugin2, 'Should still be a plugin 2 generic instance');
+        $this->assertInstanceOf('Imdad\CakeMongo\Collection', $plugin2, 'Should still be a plugin 2 generic instance');
     }
 
     /**
@@ -247,7 +247,7 @@ class CollectionRegistryTest extends TestCase
      */
     public function testSet()
     {
-        $mock = $this->getMock('Dilab\CakeMongo\Collection');
+        $mock = $this->getMock('Imdad\CakeMongo\Collection');
         $this->assertSame($mock, CollectionRegistry::set('Articles', $mock));
         $this->assertSame($mock, CollectionRegistry::get('Articles'));
     }
@@ -332,7 +332,5 @@ class CollectionRegistryTest extends TestCase
 
         $this->assertSame($plugin, $plugin3, 'Should be the same TestPluginTwo.Comments object');
     }
-
-
 
 }

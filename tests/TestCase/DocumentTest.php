@@ -1,8 +1,8 @@
 <?php
-namespace Dilab\CakeMongo\Test\TestCase;
+namespace Imdad\CakeMongo\Test\TestCase;
 
 use Cake\TestSuite\TestCase;
-use Dilab\CakeMongo\Document;
+use Imdad\CakeMongo\Document;
 use MongoDB\Model\BSONDocument;
 
 class DocumentTest extends TestCase

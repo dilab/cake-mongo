@@ -1,9 +1,9 @@
 <?php
 
-namespace Dilab\CakeMongo\Test\TestCase\Datasource;
+namespace Imdad\CakeMongo\Test\TestCase\Datasource;
 
 use Cake\TestSuite\TestCase;
-use Dilab\CakeMongo\Datasource\MappingSchema;
+use Imdad\CakeMongo\Datasource\MappingSchema;
 
 /**
  * Test case for the MappingSchema
@@ -32,14 +32,14 @@ class MappingSchemaTest extends TestCase
         $this->markTestSkipped('Nothing to test yet');
         $data = [
             'user_id' => [
-                'type' => 'integer'
+                'type' => 'integer',
             ],
             'title' => [
-                'type' => 'string'
+                'type' => 'string',
             ],
             'body' => [
-                'type' => 'string'
-            ]
+                'type' => 'string',
+            ],
         ];
         $mapping = new MappingSchema('articles', $data);
         $expected = array_keys($data);
@@ -56,15 +56,15 @@ class MappingSchemaTest extends TestCase
         $this->markTestSkipped('Nothing to test yet');
         $data = [
             'user_id' => [
-                'type' => 'integer'
+                'type' => 'integer',
             ],
             'title' => [
                 'type' => 'string',
                 'null_value' => 'na',
             ],
             'body' => [
-                'type' => 'string'
-            ]
+                'type' => 'string',
+            ],
         ];
         $mapping = new MappingSchema('articles', $data);
         $this->assertEquals($data['user_id'], $mapping->field('user_id'));
@@ -82,13 +82,13 @@ class MappingSchemaTest extends TestCase
         $this->markTestSkipped('Nothing to test yet');
         $data = [
             'user_id' => [
-                'type' => 'integer'
+                'type' => 'integer',
             ],
             'address' => [
                 'type' => 'nested',
                 'properties' => [
                     'street' => ['type' => 'string'],
-                ]
+                ],
             ],
         ];
         $mapping = new MappingSchema('articles', $data);
@@ -106,13 +106,13 @@ class MappingSchemaTest extends TestCase
         $this->markTestSkipped('Nothing to test yet');
         $data = [
             'user_id' => [
-                'type' => 'integer'
+                'type' => 'integer',
             ],
             'address' => [
                 'type' => 'nested',
                 'properties' => [
                     'street' => ['type' => 'string'],
-                ]
+                ],
             ],
         ];
         $mapping = new MappingSchema('articles', $data);

@@ -1,15 +1,14 @@
 <?php
 
-
-namespace Dilab\CakeMongo;
+namespace Imdad\CakeMongo;
 
 use Cake\Datasource\QueryTrait;
-use Dilab\CakeMongo\Filter\AbstractFilter;
+use Imdad\CakeMongo\Filter\AbstractFilter;
 use IteratorAggregate;
 
 /**
  * Class Query
- * @package Dilab\CakeMongo
+ * @package Imdad\CakeMongo
  *
  */
 class Query implements IteratorAggregate
@@ -27,7 +26,7 @@ class Query implements IteratorAggregate
         'filter' => [],
         'order' => [],
         'limit' => null,
-        'offset' => null
+        'offset' => null,
     ];
 
     protected $_mongoQuery = [];
@@ -48,7 +47,7 @@ class Query implements IteratorAggregate
 
     /**
      * Query constructor.
-     * @param \Dilab\CakeMongo\Collection $repository
+     * @param \Imdad\CakeMongo\Collection $repository
      */
     public function __construct(Collection $repository)
     {
@@ -146,7 +145,7 @@ class Query implements IteratorAggregate
      */
     public function limit($limit)
     {
-        $this->_parts['limit'] = (int)$limit;
+        $this->_parts['limit'] = (int) $limit;
 
         return $this;
     }
@@ -160,7 +159,7 @@ class Query implements IteratorAggregate
      */
     public function offset($num)
     {
-        $this->_parts['offset'] = (int)$num;
+        $this->_parts['offset'] = (int) $num;
 
         return $this;
     }
@@ -270,12 +269,12 @@ class Query implements IteratorAggregate
         if (PHP_INT_MAX <= $offset) {
             $offset = PHP_INT_MAX;
         }
-        $this->offset((int)$offset);
+        $this->offset((int) $offset);
 
         return $this;
     }
 
-     /**
+    /**
      * Compile the MongoDB query.
      *
      * @return string The MongoDB query.
@@ -305,7 +304,7 @@ class Query implements IteratorAggregate
 
                 return [
                     'key' => $key,
-                    'order' => ($order['order'] == 'desc' ? -1 : 1)
+                    'order' => ($order['order'] == 'desc' ? -1 : 1),
                 ];
 
             })->reduce(function ($carry, $item) {
@@ -351,7 +350,7 @@ class Query implements IteratorAggregate
      * }}}
      *
      * You can read about the available operators and how they translate to MongoDB
-     * filters in the `Dilab\CakeMongo\FilterBuilder::parse()` method documentation.
+     * filters in the `Imdad\CakeMongo\FilterBuilder::parse()` method documentation.
      *
      * Additionally, it is possible to use a closure as first argument. The closure will receive
      * a FilterBuilder instance, that you can use for creating arbitrary filter combinations:
@@ -365,13 +364,13 @@ class Query implements IteratorAggregate
      * Finally, you can pass any already built filters as first argument:
      *
      * {{{
-     *   $query->where(new \Dilab\CakeMongo\ComparisionFilter('price', 'gte', 10));
+     *   $query->where(new \Imdad\CakeMongo\ComparisionFilter('price', 'gte', 10));
      * }}{
      *
-     * @param array|callable|\Dilab\CakeMongo\AbstractFilter $conditions The list of conditions.
+     * @param array|callable|\Imdad\CakeMongo\AbstractFilter $conditions The list of conditions.
      * @param bool $overwrite Whether or not to replace previous filters.
      * @return $this
-     * @see \Dilab\CakeMongo\FilterBuilder
+     * @see \Imdad\CakeMongo\FilterBuilder
      */
     public function where($conditions, $overwrite = false)
     {
@@ -392,7 +391,7 @@ class Query implements IteratorAggregate
     /**
      * {@inheritDoc}
      *
-     * @return \Dilab\CakeMongo\Query
+     * @return \Imdad\CakeMongo\Query
      */
     public function find($type = 'all', $options = [])
     {
@@ -419,7 +418,7 @@ class Query implements IteratorAggregate
     /**
      * Executes the query.
      *
-     * @return \Dilab\CakeMongo\ResultSet The results of the query
+     * @return \Imdad\CakeMongo\ResultSet The results of the query
      */
     protected function _execute()
     {

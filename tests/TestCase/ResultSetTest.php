@@ -1,18 +1,16 @@
 <?php
-namespace Dilab\CakeMongo\Test\TestCase;
+namespace Imdad\CakeMongo\Test\TestCase;
 
-use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\TestCase;
-use Dilab\CakeMongo\Collection;
-use Dilab\CakeMongo\Datasource\Connection;
-use Dilab\CakeMongo\Document;
-use Dilab\CakeMongo\Query;
-use Dilab\CakeMongo\ResultSet;
-
+use Imdad\CakeMongo\Collection;
+use Imdad\CakeMongo\Datasource\Connection;
+use Imdad\CakeMongo\Document;
+use Imdad\CakeMongo\Query;
+use Imdad\CakeMongo\ResultSet;
 
 class ResultSetTest extends TestCase
 {
-    public $fixtures = ['plugin.dilab/cake_mongo.articles'];
+    public $fixtures = ['plugin.imdad/cake_mongo.articles'];
 
     public function testConstructor()
     {
